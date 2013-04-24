@@ -35,14 +35,14 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- Inject preface at end of book info. -->
+  <!-- Inject preface after end of book info. -->
   <xsl:template match="d:book/d:info">
     <xsl:copy>
       <xsl:apply-templates select="@* | node()"/>
-      <xsl:element name="xi:include">
-        <xsl:attribute name="href">Preface.xml</xsl:attribute>
-      </xsl:element>
     </xsl:copy>
+    <xsl:element name="xi:include">
+      <xsl:attribute name="href">Preface.xml</xsl:attribute>
+    </xsl:element>
   </xsl:template>
 
   <!-- Inject revision history at end of book. -->
