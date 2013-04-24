@@ -3,7 +3,7 @@
 <!ENTITY % BOOK_ENTITIES SYSTEM "Book_Entities.ent">
 %BOOK_ENTITIES;
 ]>
-<preface xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="pref-Preface">
+<preface xmlns="http://docbook.org/ns/docbook" version="5.0">
     <info>
         <title>Preface</title>
     </info>
