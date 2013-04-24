@@ -164,7 +164,7 @@ mainfile: ${SOURCE_XML%.*}
 condition: rhel
 DELIM
 
-cat > ${DEST_DIR_ABSL_SRC}/Book_Entities.ent <<DELIM
+cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/\.ent} <<DELIM
 <!ENTITY PRODUCT "OpenStack">
 <!ENTITY BOOKID "">
 <!ENTITY YEAR "`date +"%Y"`">
