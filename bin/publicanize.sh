@@ -108,12 +108,18 @@ else
     mkdir ${DEST_DIR_ABSL_SRC}/images
 fi
 
+if [ -d "${DEST_DIR_ABSL_SRC}/samples" ]; then
+    mv ${DEST_DIR_ABSL_SRC}/samples ${DEST_DIR_ABSL_SRC}/extras
+else
+    mkdir ${DEST_DIR_ABSL_SRC}/extras
+fi
+
 if [ -d "${DEST_DIR_ABSL_SRC}/common/figures" ]; then
     mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/images/common
 fi
 
-if [ -d "${DEST_DIR_ABSL_SRC}/samples" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/samples ${DEST_DIR_ABSL_SRC}/extras
+if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
+    mv ${DEST_DIR_ABSL_SRC}/common/samples ${DEST_DIR_ABSL_SRC}/extras/common
 fi
 
 # Transformations...till all are one!
@@ -123,10 +129,18 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     mv ${XML}.new ${XML}
 done
 
+# TODO: There is a bug in these two, they miss cases where it's an XML file in
+# common including a file from common itself. Thus ./samples/... for example
+# sticks.
 # Transformation for files in "common" to get the correct images.
 for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
-    # TODO: What about deeper nesting?
     ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common-images.xsl > ${XML}.new
+    mv ${XML}.new ${XML}
+done
+
+# Transformation for files in "common" to get the correct extras.
+for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
+    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common-extras.xsl > ${XML}.new
     mv ${XML}.new ${XML}
 done
 
