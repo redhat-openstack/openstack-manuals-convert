@@ -130,6 +130,16 @@ for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
     mv ${XML}.new ${XML}
 done
 
+# Now to check for other content which has been included from higher level
+# directories... We're going to work around this but also raise it as a
+# warning.
+for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
+    for INCLUDE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-xml.xsl`; do
+        echo "WARNING: ${XML} includes ${INCLUDE}."
+    done
+done
+
+
 # Copy common XML files. These will be injected into the book. Note that they
 # are copied after the common transformations are run intentionally. These are
 # expected to be "publican compatible" already.

@@ -4,7 +4,7 @@
   <xsl:output method="text" omit-xml-declaration="yes" indent="yes" />
 
   <xsl:template match="xi:include[@href]">
-    <xsl:if test="matches(@href,'.*\.xml$')">
+    <xsl:if test="matches(@href,'\.\./.*\.xml$')">
       <xsl:value-of select="@href"/><xsl:text>&#10;</xsl:text>
     </xsl:if>
   </xsl:template>
