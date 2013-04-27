@@ -97,7 +97,7 @@ done
 # not work because publican does not follow them when copying for build, breaking
 # the links.
 if [ -d "${DEST_DIR_ABSL_SRC}/locale" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/en-US/locale ${DEST_DIR_ABSL}/pot
+    mv ${DEST_DIR_ABSL_SRC}/locale ${DEST_DIR_ABSL}/pot
 else
     mkdir ${DEST_DIR_ABSL_SRC}/pot
 fi
