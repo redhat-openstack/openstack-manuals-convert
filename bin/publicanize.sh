@@ -13,6 +13,7 @@ XSLT_PROC=`which saxon`
 CONF_DIR="/home/sgordon/Source/publizanize/etc"
 XSLT_DIR="/home/sgordon/Source/publicanize/xsl"
 XML_DIR="/home/sgordon/Source/publicanize/xml"
+CFG_DIR="/home/sgordon/Source/publicanize/cfg"
 TOP_DIR=`pwd`
 
 # xsltproc executable must be available.
@@ -171,17 +172,10 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl p
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 
 echo "Writing publican.cfg."
-cat > ${DEST_DIR_ABSL}/publican.cfg <<DELIM
-xml_lang: en-US
-dtdver: 5.0
-type: Book
-brand: RedHat
-git_branch: docs-rhel-6
-info_file: ${SOURCE_XML}
-mainfile: ${SOURCE_XML%.*}
-condition: rhel
-DELIM
+cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
+sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
+echo "Writing ${SOURCE_XML/\.xml/\.ent},"
 cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/\.ent} <<DELIM
 <!ENTITY PRODUCT "OpenStack">
 <!ENTITY BOOKID "">
