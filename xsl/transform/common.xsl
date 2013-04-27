@@ -7,10 +7,18 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="xi:iinclude[@href]">
+    <xsl:copy>
+      <xsl:attribute name="fileref">
+        <xsl:value-of select="replace(@href,'^extras','extras/common')" />
+      </xsl:attribute>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="d:imagedata[@fileref]">
     <xsl:copy>
       <xsl:attribute name="fileref">
-        <xsl:value-of select="replace(@fileref,'^\./images','./images/common')" />
+        <xsl:value-of select="replace(@fileref,'^images','images/common')" />
       </xsl:attribute>
     </xsl:copy>
   </xsl:template>

@@ -497,14 +497,19 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
+        <xsl:when test="matches(@href, '^[\./]*common/samples')">
+          <xsl:attribute name="href">
+            <xsl:value-of select="replace(@href,'^[\./]*common/samples','extras/common/')" />
+          </xsl:attribute>
+        </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*samples')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*samples','./extras')" />
+            <xsl:value-of select="replace(@href,'^[\./]*samples','extras')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*common')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*common','./common')" />
+            <xsl:value-of select="replace(@href,'^[\./]*common','common')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
@@ -519,9 +524,23 @@
   <!-- Replace references to "figures" directory with references to "images". -->
   <xsl:template match="d:imagedata[@fileref]">
     <xsl:copy>
-      <xsl:attribute name="fileref">
-        <xsl:value-of select="replace(@fileref,'^[\./]*figures','./images')" />
-      </xsl:attribute>
+      <xsl:choose>
+        <xsl:when test="matches(@fileref, '^[\./]*figures')">
+          <xsl:attribute name="fileref">
+            <xsl:value-of select="replace(@fileref,'^[\./]*figures','images')" />
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="matches(@fileref, '^[\./]*common/figures')">
+          <xsl:attribute name="fileref">
+            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures','images/common')" />
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="fileref">
+            <xsl:value-of select="@fileref" />
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:copy>
   </xsl:template>
 

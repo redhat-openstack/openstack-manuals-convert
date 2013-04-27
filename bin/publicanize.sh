@@ -132,15 +132,9 @@ done
 # TODO: There is a bug in these two, they miss cases where it's an XML file in
 # common including a file from common itself. Thus ./samples/... for example
 # sticks.
-# Transformation for files in "common" to get the correct images.
+# Transformation for files in "common" to get the correct images and extras.
 for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
-    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common-images.xsl > ${XML}.new
-    mv ${XML}.new ${XML}
-done
-
-# Transformation for files in "common" to get the correct extras.
-for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
-    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common-extras.xsl > ${XML}.new
+    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common.xsl > ${XML}.new
     mv ${XML}.new ${XML}
 done
 
