@@ -75,6 +75,7 @@ fi
 
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":-:"
+OPT_BRAND=
 OPT_CONDITION=
 OPT_CONFIG=
 OPT_OUTPUT=
@@ -91,6 +92,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
         # leading '-').
         -)
             case "${OPTARG}" in
+                brand)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_BRAND="${VAL}"
+                    ;;
+                brand=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_BRAND="${VAL}"
+                    ;;
                 condition)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
                     OPT_CONDITION="${VAL}"
@@ -284,14 +294,27 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl \
              > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 
+# Write a publican.cfg file using either the bundled configuration or a user
+# supplied one as a template. then replace key values based on user input and/or
+# source files.
 echo "Writing publican.cfg."
 if [ -f "${OPT_CONFIG}" ]; then
     cp ${OPT_CONFIG} ${DEST_DIR_ABSL}/publican.cfg
 else
     cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
 fi
+
+# Always updated the source XML file name.
 sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
+# If a brand was set use it, otherwise use common-db5 by default.
+if [ ! -z "${OPT_BRAND}" ]; then
+    sed -i -e "s/BRAND/${OPT_BRAND}/g" ${DEST_DIR_ABSL}/publican.cfg
+else
+    sed -i -e "s/BRAND/common-db5/g" ${DEST_DIR_ABSL}/publican.cfg
+fi
+
+# If a condition was set then append it to the file.
 if [ ! -z "${OPT_CONDITION}" ]; then
     echo "condition: ${OPT_CONDITION}" >> ${DEST_DIR_ABSL}/publican.cfg
 fi
