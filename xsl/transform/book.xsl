@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude">
 
-  <xsl:param name="productnumber" select="0.0" />
+  <xsl:param name="productname" />
+  <xsl:param name="productnumber" />
 
   <xsl:template match="@*|node()">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
     </xsl:copy>
-  </xsl:template>
-
-  <!-- If there is no productnumber element then set one. -->
-  <xsl:template match="d:productname">
-    <xsl:copy-of select="." />
-      <xsl:if test="not(//productnumber)">
-        <xsl:text>&#xa;</xsl:text>
-        <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
-            <xsl:value-of select="$productnumber"/>
-        </xsl:element>
-      </xsl:if>
   </xsl:template>
 
   <!-- Replace author with an xi include to the author group -->
@@ -35,10 +25,40 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- Inject preface after end of book info. -->
+  <!-- If productname or productnumber elements exist, and values were
+       provided as parameters, then update the elements with the values. -->
+  <xsl:template match="d:book/d:info/d:productname">
+    <xsl:if test="$productname != ''">
+      <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
+        <xsl:value-of select="$productname"/>
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="d:book/d:info/d:productnumber">
+    <xsl:if test="$productnumber != ''">
+      <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+        <xsl:value-of select="$productnumber"/>
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
+  <!-- Inject preface after end of book info, inject productname and
+       productnumber if they didn't already exist (if they do exist then they
+       are updated in the previous step). -->
   <xsl:template match="d:book/d:info">
     <xsl:copy>
       <xsl:apply-templates select="@* | node()"/>
+      <xsl:if test="not(//d:productname)">
+        <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$productname" />
+        </xsl:element>
+      </xsl:if>
+      <xsl:if test="not(//d:productnumber)">
+        <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$productnumber" />
+        </xsl:element>
+      </xsl:if>
     </xsl:copy>
     <xsl:element name="xi:include">
       <xsl:attribute name="href">Preface.xml</xsl:attribute>

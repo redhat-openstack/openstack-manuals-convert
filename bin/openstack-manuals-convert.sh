@@ -76,6 +76,8 @@ fi
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":de:h-:"
 OPT_OUTPUT=
+OPT_PRODUCT_NAME=
+OPT_PRODUCT_NUMBER=
 
 # Loop through the arguments used to call the script, handling flags and their
 # arguments, where applicable.
@@ -95,6 +97,24 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_OUTPUT="${VAL}"
+                    ;;
+                productname)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_PRODUCT_NAME="${VAL}"
+                    ;;
+                productname=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_PRODUCT_NAME="${VAL}"
+                    ;;
+                productnumber)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_PRODUCT_NUMBER="${VAL}"
+                    ;;
+                productnumber=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_PRODUCT_NUMBER="${VAL}"
                     ;;
                 *)
                     if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
@@ -183,9 +203,6 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     mv ${XML}.new ${XML}
 done
 
-# TODO: There is a bug in these two, they miss cases where it's an XML file in
-# common including a file from common itself. Thus ./samples/... for example
-# sticks.
 # Transformation for files in "common" to get the correct images and extras.
 for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
     ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common.xsl > ${XML}.new
@@ -217,11 +234,14 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/Revision_History.xml ${XSLT_DIR}/transform/rev
              surname="${SURNAME}" \
              email="${EMAIL}" \
              commit="${COMMIT}" \
-             productnumber="2.0" > ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new
+             productnumber="${OPT_PRODUCT_NUMBER}" > ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new
 mv ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new ${DEST_DIR_ABSL_SRC}/Revision_History.xml
 
 echo "Performing book file transformations."
-${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl productnumber="2.0" > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new
+${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl \
+             productname="${OPT_PRODUCT_NAME}" \
+             productnumber="${OPT_PRODUCT_NUMBER}" \
+             > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 
 echo "Writing publican.cfg."
@@ -230,7 +250,7 @@ sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
 echo "Writing ${SOURCE_XML/\.xml/\.ent},"
 cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/\.ent} <<DELIM
-<!ENTITY PRODUCT "OpenStack">
+<!ENTITY PRODUCT "${OPT_PRODUCT_NAME}">
 <!ENTITY BOOKID "">
 <!ENTITY YEAR "`date +"%Y"`">
 <!ENTITY HOLDER "Red Hat, Inc">
