@@ -75,6 +75,7 @@ fi
 
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":-:"
+OPT_CONDITION=
 OPT_CONFIG=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME=
@@ -90,6 +91,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
         # leading '-').
         -)
             case "${OPTARG}" in
+                condition)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_CONDITION="${VAL}"
+                    ;;
+                condition=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_CONDITION="${VAL}"
+                    ;;
                 config)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
                     OPT_CONFIG="${VAL}"
@@ -281,6 +291,10 @@ else
     cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
 fi
 sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
+
+if [ ! -z "${OPT_CONDITION}" ]; then
+    echo "condition: ${OPT_CONDITION}" >> ${DEST_DIR_ABSL}/publican.cfg
+fi
 
 echo "Writing ${SOURCE_XML/\.xml/.ent}"
 cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/.ent} <<DELIM
