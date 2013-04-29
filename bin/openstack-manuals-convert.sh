@@ -74,7 +74,8 @@ if [ ! -f ${SOURCE_DIR_ABSL}/${SOURCE_XML} ]; then
 fi
 
 # Set the expected 'short' parameters, note the inclusion of '-'.
-OPTSPEC=":de:h-:"
+OPTSPEC=":-:"
+OPT_CONFIG=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME=
 OPT_PRODUCT_NUMBER=
@@ -89,12 +90,19 @@ while getopts "${OPTSPEC}" OPTCHAR; do
         # leading '-').
         -)
             case "${OPTARG}" in
-                # Editor check for '--editor /usr/bin/vim' style.
+                config)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_CONFIG="${VAL}"
+                    ;;
+                config=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_CONFIG="${VAL}"
+                    ;;
                 output)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
                     OPT_OUTPUT="${VAL}"
                     ;;
-                # Editor check for '--editor=/usr/bin/vim' style.
                 output=*)
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
@@ -267,7 +275,11 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl \
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 
 echo "Writing publican.cfg."
-cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
+if [ -f "${OPT_CONFIG}" ]; then
+    cp ${OPT_CONFIG} ${DEST_DIR_ABSL}/publican.cfg
+else
+    cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
+fi
 sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
 echo "Writing ${SOURCE_XML/\.xml/.ent}"
