@@ -73,8 +73,61 @@ if [ ! -f ${SOURCE_DIR_ABSL}/${SOURCE_XML} ]; then
     exit 1
 fi
 
-# Create working directories.
-DEST_DIR_ABSL=`mktemp --directory --suffix=".publicanize"`
+# Set the expected 'short' parameters, note the inclusion of '-'.
+OPTSPEC=":de:h-:"
+OPT_OUTPUT=
+
+# Loop through the arguments used to call the script, handling flags and their
+# arguments, where applicable.
+while getopts "${OPTSPEC}" OPTCHAR; do
+    case "${OPTCHAR}" in
+        # Long arguments start with a - (getopts has already stripped the
+        # leading '-').
+        -)
+            case "${OPTARG}" in
+                # Editor check for '--editor /usr/bin/vim' style.
+                output)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_OUTPUT="${VAL}"
+                    ;;
+                # Editor check for '--editor=/usr/bin/vim' style.
+                output=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_OUTPUT="${VAL}"
+                    ;;
+                *)
+                    if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
+                        echo "ERROR: Unsupported option '--${OPTARG}'." >&2
+                        exit 1
+                    fi
+                    ;;
+            esac;;
+        # Catch all for any other arguments, note that this is only catching
+        # arguments starting with a '-', which has been strippted by getopts
+        # already. This means the TOPIC_ID is allowed to flow through for 
+        # further processing.
+        *)
+            if [ "${OPTERR}" != 1 ] || [ "${OPTSPEC:0:1}" = ":" ]; then
+                echo "ERROR: Un-expected non-option argument: '-${OPTARG}'" >&2
+                exit 1
+            fi
+            ;;
+    esac
+done
+
+# Set working directory, if the user specified one then use it otherwise
+# generate using mktemp.
+DEST_DIR_ABSL=
+if [ -z "${OPT_OUTPUT}" ]; then
+    DEST_DIR_ABSL=`mktemp --directory --suffix=".publicanize"`
+else
+    if [ ! -d "${OPT_OUTPUT}" ]; then
+        mkdir -p ${OPT_OUTPUT}
+    fi
+    DEST_DIR_ABSL=`readlink -e ${OPT_OUTPUT}`
+fi
+
 DEST_DIR_ABSL_SRC="${DEST_DIR_ABSL}/en-US"
 mkdir -p ${DEST_DIR_ABSL_SRC}
 
