@@ -182,3 +182,11 @@ cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/\.ent} <<DELIM
 <!ENTITY YEAR "`date +"%Y"`">
 <!ENTITY HOLDER "Red Hat, Inc">
 DELIM
+
+# Remove unused XML files. These are largely files that were bulk copied with
+# common content but are not used in this specific book.
+cd ${DEST_DIR_ABSL}
+for FILE in `publican print_unused --nocolours | grep '\.xml$'`;
+    do rm ./en-US/${FILE};
+done
+cd -
