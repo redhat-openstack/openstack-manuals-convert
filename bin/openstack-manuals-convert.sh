@@ -78,6 +78,8 @@ OPTSPEC=":de:h-:"
 OPT_OUTPUT=
 OPT_PRODUCT_NAME=
 OPT_PRODUCT_NUMBER=
+OPT_TITLE=
+OPT_SUBTITLE=
 
 # Loop through the arguments used to call the script, handling flags and their
 # arguments, where applicable.
@@ -115,6 +117,24 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_PRODUCT_NUMBER="${VAL}"
+                    ;;
+                title)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_TITLE="${VAL}"
+                    ;;
+                title=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_TITLE="${VAL}"
+                    ;;
+                subtitle)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_SUBTITLE="${VAL}"
+                    ;;
+                subtitle=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_SUBTITLE="${VAL}"
                     ;;
                 *)
                     if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
@@ -241,6 +261,8 @@ echo "Performing book file transformations."
 ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl \
              productname="${OPT_PRODUCT_NAME}" \
              productnumber="${OPT_PRODUCT_NUMBER}" \
+             title="${OPT_TITLE}" \
+             subtitle="${OPT_SUBTITLE}" \
              > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 

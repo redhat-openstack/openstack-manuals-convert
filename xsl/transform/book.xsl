@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude">
 
+  <xsl:param name="title" />
+  <xsl:param name="subtitle" />
+
   <xsl:param name="productname" />
   <xsl:param name="productnumber" />
 
@@ -25,8 +28,26 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- If productname or productnumber elements exist, and values were
-       provided as parameters, then update the elements with the values. -->
+  <!-- If title, subtitle productname or productnumber elements exist, and values were
+       provided as parameters, then update the elements with the values. Note that
+       we do make an exception for title and assume that the source material will
+       always have this node.-->
+  <xsl:template match="d:book/d:title | d:book/d:info/d:title">
+    <xsl:if test="$title != ''">
+      <xsl:element name="title" namespace="http://docbook.org/ns/docbook">
+        <xsl:value-of select="$title" />
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="d:book/d:subtitle | d:book/d:info/d:subtitle">
+    <xsl:if test="$subtitle != ''">
+      <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
+        <xsl:value-of select="$subtitle" />
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="d:book/d:info/d:productname">
     <xsl:if test="$productname != ''">
       <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
@@ -49,15 +70,23 @@
   <xsl:template match="d:book/d:info">
     <xsl:copy>
       <xsl:apply-templates select="@* | node()"/>
+      <xsl:if test="not(d:book/d:subtitle) and not(d:book/d:info/d:subtitle)">
+        <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$subtitle" />
+        </xsl:element>
+        <xsl:text>&#10;</xsl:text>
+      </xsl:if>
       <xsl:if test="not(//d:productname)">
         <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
           <xsl:value-of select="$productname" />
         </xsl:element>
+        <xsl:text>&#10;</xsl:text>
       </xsl:if>
       <xsl:if test="not(//d:productnumber)">
         <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
           <xsl:value-of select="$productnumber" />
         </xsl:element>
+        <xsl:text>&#10;</xsl:text>
       </xsl:if>
     </xsl:copy>
     <xsl:element name="xi:include">
