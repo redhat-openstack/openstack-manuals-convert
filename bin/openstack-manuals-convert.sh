@@ -270,8 +270,8 @@ echo "Writing publican.cfg."
 cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
 sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
-echo "Writing ${SOURCE_XML/\.xml/\.ent},"
-cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/\.ent} <<DELIM
+echo "Writing ${SOURCE_XML/\.xml/.ent}"
+cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/.ent} <<DELIM
 <!ENTITY PRODUCT "${OPT_PRODUCT_NAME}">
 <!ENTITY BOOKID "">
 <!ENTITY YEAR "`date +"%Y"`">
