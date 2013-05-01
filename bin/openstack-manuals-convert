@@ -10,10 +10,10 @@
 XSLT_PROC=`which saxon`
 
 # Location of XSLT to be used in transforms.
-CONF_DIR="/home/sgordon/Source/publizanize/etc"
-XSLT_DIR="/home/sgordon/Source/publicanize/xsl"
-XML_DIR="/home/sgordon/Source/publicanize/xml"
-CFG_DIR="/home/sgordon/Source/publicanize/cfg"
+DATA_DIR="/usr/share/openstack-manuals-convert"
+XSLT_DIR="${DATA_DIR}/xsl"
+XML_DIR="${DATA_DIR}/xml"
+CFG_DIR="${DATA_DIR}/cfg"
 TOP_DIR=`pwd`
 
 # xsltproc executable must be available.
