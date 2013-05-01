@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink">
 
    <xsl:param name="date" />
    <xsl:param name="firstname" />
@@ -47,8 +47,8 @@
    <xsl:template match="d:revision/d:revdescription/d:simplelist/d:member">
      <xsl:element name="member" namespace="http://docbook.org/ns/docbook">
        <xsl:text>Rebased from commit </xsl:text>
-       <xsl:element name="ulink" namespace="http://docbook.org/ns/docbook">
-         <xsl:attribute name="url">
+       <xsl:element name="link" namespace="http://docbook.org/ns/docbook">
+         <xsl:attribute name="xlink:href">
            <xsl:text>https://github.com/openstack/openstack-manuals/archive/</xsl:text><xsl:value-of select="$commit" /><xsl:text>.tar.gz</xsl:text>
          </xsl:attribute>
          <xsl:value-of select="$commit" />

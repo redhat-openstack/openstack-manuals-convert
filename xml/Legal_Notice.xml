@@ -3,24 +3,24 @@
 <!ENTITY % BOOK_ENTITIES SYSTEM "Book_Entities.ent">
 %BOOK_ENTITIES;
 ]>
-<legalnotice xmlns="http://docbook.org/ns/docbook" version="5.0">
+<legalnotice xmlns="http://docbook.org/ns/docbook" version="5.0" xmlns:xlink="http://www.w3.org/1999/xlink">
     <para>
         Copyright <trademark class="copyright"></trademark> &YEAR; &HOLDER;.
     </para>
      <para>
-        The text of and illustrations in this document are licensed by Red Hat under a Creative Commons Attribution–Share Alike 3.0 Unported license ("CC-BY-SA"). An explanation of CC-BY-SA is available at <ulink url="http://creativecommons.org/licenses/by-sa/3.0/" />. In accordance with CC-BY-SA, if you distribute this document or an adaptation of it, you must provide the URL for the original version.
+        The text of and illustrations in this document are licensed by Red Hat under a Creative Commons Attribution–Share Alike 3.0 Unported license ("CC-BY-SA"). An explanation of CC-BY-SA is available at <link xlink:href="http://creativecommons.org/licenses/by-sa/3.0/" />. In accordance with CC-BY-SA, if you distribute this document or an adaptation of it, you must provide the URL for the original version.
     </para>
      <para>
         Red Hat, as the licensor of this document, waives the right to enforce, and agrees not to assert, Section 4d of CC-BY-SA to the fullest extent permitted by applicable law.
      </para>
      <para>
-        This documentation is based on that provided by the OpenStack Foundation at <ulink url="http://docs.openstack.org/trunk/" />.
+        This documentation is based on that provided by the OpenStack Foundation at <link xlink:href="http://docs.openstack.org/trunk/" />.
     </para>
 
       <para>Copyright 2011, 2012, 2013 OpenStack Foundation
       </para>
 
-      <para>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <ulink url="http://www.apache.org/licenses/LICENSE-2.0" />
+      <para>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at <link xlink:href="http://www.apache.org/licenses/LICENSE-2.0" />
       </para>
 
       <para>
