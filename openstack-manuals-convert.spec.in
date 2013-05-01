@@ -1,0 +1,65 @@
+Name:		openstack-manuals-convert
+Version:	@VERSION@
+Release:	1%{?dist}
+Summary:	Convert openstack-manuals guides for use with Publican.
+
+Group:		Development/Tools
+License:	ASL 3.0
+Source0:	%{name}-%{version}.tar.gz
+
+BuildArch:  noarch
+BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildRequires:  automake
+BuildRequires:  autoconf
+Requires:   bash
+Requires:   coreutils
+Requires:	saxon
+Requires:   publican >= 3.0.0
+
+%description
+Convert openstack-manuals guides into a format suitable for building with
+publican.
+
+%prep
+%setup -q
+
+
+%build
+
+
+%install
+install -d $RPM_BUILD_ROOT%{_bindir}
+install -m 0755 bin/openstack-manuals-convert $RPM_BUILD_ROOT%{_bindir}
+
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/cfg
+install cfg/* $RPM_BUILD_ROOT%{_datarootdir}/%{name}/cfg/
+
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xsl
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xsl/extract
+install xsl/extract/* $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xsl/extract/
+
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xsl/transform
+install xsl/transform/* $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xsl/transform/
+
+install -d $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xml
+install xml/* $RPM_BUILD_ROOT%{_datarootdir}/%{name}/xml
+
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/java/resolver/
+install etc/java/resolver/CatalogManager.properties $RPM_BUILD_ROOT%{_sysconfdir}/java/resolver/
+
+install -d $RPM_BUILD_ROOT%{_docdir}/%{name}/
+install doc/LICENSE $RPM_BUILD_ROOT%{_docdir}/%{name}/
+
+
+%files
+%{_bindir}/openstack-manuals-convert
+%doc %{_docdir}/%{name}/LICENSE
+%{_datarootdir}/%{name}
+%config %{_sysconfdir}/java/resolver/
+
+
+%changelog
+* Tue Apr 1 2013 Stephen Gordon <sgordon@redhat.com> 0.1-1
+- First packaged.
