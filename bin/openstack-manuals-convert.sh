@@ -334,8 +334,11 @@ sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 # If a brand was set use it, otherwise use common-db5 by default.
 if [ ! -z "${OPT_BRAND}" ]; then
     sed -i -e "s/BRAND/${OPT_BRAND}/g" ${DEST_DIR_ABSL}/publican.cfg
+    cp /usr/share/publican/Common_Content/${OPT_BRAND}/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
 else
     sed -i -e "s/BRAND/common-db5/g" ${DEST_DIR_ABSL}/publican.cfg
+    cp /usr/share/publican/Common_Content/common-db5/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
+
 fi
 
 # If a condition was set then append it to the file.
