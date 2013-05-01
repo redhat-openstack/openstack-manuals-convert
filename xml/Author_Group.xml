@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <authorgroup xmlns="http://docbook.org/ns/docbook" version="5.0">
-    <author>
-      <orgname>
-		<inlinemediaobject>
-			<imageobject>
-				<imagedata fileref="Common_Content/images/title_logo.svg" format="SVG" />
-			</imageobject>
-		</inlinemediaobject>
-      </orgname>
-    </author>
 	<author>
       <personname>
         <firstname/><surname>Red Hat Documentation Team</surname></personname>
         <affiliation>
-			<orgname/>
-			<orgdiv/>
+          <orgname>
+            <inlinemediaobject>
+                <imageobject>
+                    <imagedata fileref="Common_Content/images/title_logo.svg" format="SVG" />
+                </imageobject>
+            </inlinemediaobject>
+          </orgname>
 		</affiliation>
         <email/>
     </author>
