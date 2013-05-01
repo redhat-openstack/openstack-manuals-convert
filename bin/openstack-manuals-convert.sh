@@ -328,7 +328,7 @@ else
     cp ${CFG_DIR}/publican.cfg ${DEST_DIR_ABSL}/publican.cfg
 fi
 
-# Always updated the source XML file name.
+# Always update the source XML file name.
 sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 
 # If a brand was set use it, otherwise use common-db5 by default.
@@ -361,3 +361,9 @@ for FILE in `publican print_unused --nocolours | grep '\.xml$'`;
     do rm ./en-US/${FILE};
 done
 cd -
+
+# Publican package has a bug that causes it to always look for a Book_Info.xml
+# file even when a different file is specified in the info_file directive. We
+# work around this with a symlink for now.
+# Refer: https://bugzilla.redhat.com/show_bug.cgi?id=957956
+ln -s ${SOURCE_XML} ${DEST_DIR_ABSL_SRC}/Book_Info.xml
