@@ -33,35 +33,63 @@
        we do make an exception for title and assume that the source material will
        always have this node.-->
   <xsl:template match="d:book/d:title | d:book/d:info/d:title">
-    <xsl:if test="$title != ''">
-      <xsl:element name="title" namespace="http://docbook.org/ns/docbook">
-        <xsl:value-of select="$title" />
-      </xsl:element>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$title != ''">
+        <xsl:element name="title" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$title" />
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="d:book/d:subtitle | d:book/d:info/d:subtitle">
-    <xsl:if test="$subtitle != ''">
-      <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
-        <xsl:value-of select="$subtitle" />
-      </xsl:element>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$subtitle != ''">
+        <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$subtitle" />
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="d:book/d:info/d:productname">
-    <xsl:if test="$productname != ''">
-      <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
-        <xsl:value-of select="$productname"/>
-      </xsl:element>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$productname != ''">
+        <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$productname"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="d:book/d:info/d:productnumber">
-    <xsl:if test="$productnumber != ''">
-      <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
-        <xsl:value-of select="$productnumber"/>
-      </xsl:element>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$productnumber != ''">
+        <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$productnumber"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <!-- Inject preface after end of book info, inject productname and
@@ -71,22 +99,28 @@
     <xsl:copy>
       <xsl:apply-templates select="@* | node()"/>
       <xsl:if test="not(d:book/d:subtitle) and not(d:book/d:info/d:subtitle)">
-        <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
-          <xsl:value-of select="$subtitle" />
-        </xsl:element>
-        <xsl:text>&#10;</xsl:text>
+        <xsl:if test="$subtitle != ''">
+          <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
+            <xsl:value-of select="$subtitle" />
+          </xsl:element>
+          <xsl:text>&#10;</xsl:text>
+        </xsl:if>
       </xsl:if>
       <xsl:if test="not(//d:productname)">
-        <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
-          <xsl:value-of select="$productname" />
-        </xsl:element>
-        <xsl:text>&#10;</xsl:text>
+        <xsl:if test="$productname != ''">
+          <xsl:element name="productname" namespace="http://docbook.org/ns/docbook">
+            <xsl:value-of select="$productname" />
+          </xsl:element>
+          <xsl:text>&#10;</xsl:text>
+        </xsl:if>
       </xsl:if>
       <xsl:if test="not(//d:productnumber)">
-        <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
-          <xsl:value-of select="$productnumber" />
-        </xsl:element>
-        <xsl:text>&#10;</xsl:text>
+        <xsl:if test="$productnumber != ''">
+          <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+            <xsl:value-of select="$productnumber" />
+          </xsl:element>
+          <xsl:text>&#10;</xsl:text>
+        </xsl:if>
       </xsl:if>
     </xsl:copy>
     <xsl:element name="xi:include">
