@@ -78,6 +78,7 @@ OPTSPEC=":-:"
 OPT_BRAND=
 OPT_CONDITION=
 OPT_CONFIG=
+OPT_CUSTOM_XSL=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME=
 OPT_PRODUCT_NUMBER=
@@ -119,14 +120,23 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     OPT=${OPTARG%=$VAL}
                     OPT_CONFIG="${VAL}"
                     ;;
+                customxsl)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_CUSTOM_XSL=`echo ${VAL}`
+                    ;;
+                customxsl=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_CUSTOM_XSL=`echo ${VAL}`
+                    ;;
                 output)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
-                    OPT_OUTPUT="${VAL}"
+                    OPT_OUTPUT=`echo ${VAL}`
                     ;;
                 output=*)
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
-                    OPT_OUTPUT="${VAL}"
+                    OPT_OUTPUT=`echo ${VAL}`
                     ;;
                 productname)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -245,17 +255,31 @@ if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
 fi
 
 # Transformations...till all are one!
-echo "Performing common transformations."
+echo "Performing standard transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl > ${XML}.new
     mv ${XML}.new ${XML}
 done
 
-# Transformation for files in "common" to get the correct images and extras.
+# Transformations for files in "common" to get the correct images and extras.
+echo "Performing common content transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
     ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common.xsl > ${XML}.new
     mv ${XML}.new ${XML}
 done
+
+# Transformations for "custom" XSL to be applied (if provided).
+if [ ! -z "${OPT_CUSTOM_XSL}" ]; then
+    echo "Performing custom transformations from '${OPT_CUSTOM_XSL}'."
+    if [ ! -f "${OPT_CUSTOM_XSL}" ]; then
+        echo "ERROR: Custom XSL file '${OPT_CUSTOM_XSL}' does not exist."  >&2
+        exit 1
+    fi
+    for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
+        ${XSLT_PROC} ${XML} ${OPT_CUSTOM_XSL} > ${XML}.new
+        mv ${XML}.new ${XML}
+    done
+fi
 
 # Now to check for other content which has been included from higher level
 # directories... We're going to work around this but also raise it as a
