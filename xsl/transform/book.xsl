@@ -115,12 +115,20 @@
         </xsl:if>
       </xsl:if>
       <xsl:if test="not(//d:productnumber)">
-        <xsl:if test="$productnumber != ''">
-          <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
-            <xsl:value-of select="$productnumber" />
-          </xsl:element>
-          <xsl:text>&#10;</xsl:text>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="$productnumber != ''">
+            <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+              <xsl:value-of select="$productnumber" />
+            </xsl:element>
+            <xsl:text>&#10;</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
+              <xsl:text>1</xsl:text>
+            <xsl:text>&#10;</xsl:text>
+            </xsl:element>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
     </xsl:copy>
     <xsl:element name="xi:include">
