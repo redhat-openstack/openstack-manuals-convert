@@ -85,6 +85,33 @@ OPT_PRODUCT_NUMBER=
 OPT_TITLE=
 OPT_SUBTITLE=
 
+function usage {
+
+    echo "The openstack-manuals-convert script is used to convert DocBook books written for the clouddocs-maven publishing toolchain so that they may be built with Publican.
+
+Usage:
+
+  openstack-manuals-convert [OPTIONS]
+
+Available OPTIONS:
+
+  [--brand=BRAND]                  Override publican brand, default is \"common\".
+  [--condition=CONDITION]          Set value for \"condition\" directive, for
+                                   books that use conditional processing.
+  [--config=CONFIG]                Provide a path to an alternative publican.cfg
+                                   template.
+  [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
+                                   to apply to each XML file processed.
+  [--help]                         Display usage information.
+  [--output=OUTPUT]                Provide a path to use for generated output.
+  [--productname=PRODUCTNAME]      Override the product name used in the book.
+  [--productnumber=PRODUCTNUMBER]  Override the product number used in the book.
+  [--title=TITLE]                  Override the title of the book.
+  [--subtitle=SUBTITLE]            Override the subtitle of the book.
+"
+
+}
+
 # Loop through the arguments used to call the script, handling flags and their
 # arguments, where applicable.
 while getopts "${OPTSPEC}" OPTCHAR; do
@@ -128,6 +155,10 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_CUSTOM_XSL=`echo ${VAL}`
+                    ;;
+                help)
+                    usage
+                    exit 0
                     ;;
                 output)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -177,6 +208,7 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                 *)
                     if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
                         echo "ERROR: Unsupported option '--${OPTARG}'." >&2
+                        usage
                         exit 1
                     fi
                     ;;
@@ -188,6 +220,7 @@ while getopts "${OPTSPEC}" OPTCHAR; do
         *)
             if [ "${OPTERR}" != 1 ] || [ "${OPTSPEC:0:1}" = ":" ]; then
                 echo "ERROR: Un-expected non-option argument: '-${OPTARG}'" >&2
+                usage
                 exit 1
             fi
             ;;
