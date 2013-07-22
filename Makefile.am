@@ -6,7 +6,8 @@ EXTRA_DIST = \
   xsl \
   cfg \
   etc \
-  doc
+  doc \
+  openstack-manuals-convert.spec
 DISTCLEANFILES = $(PACKAGE)-$(VERSION).tar.gz
 
 rpms: dist
