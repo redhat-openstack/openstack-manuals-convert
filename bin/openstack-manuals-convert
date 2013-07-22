@@ -22,57 +22,6 @@ if [ -z ${XSLT_PROC} ]; then
     exit 1
 fi
 
-# We need publican.cfg to extract firstname, surname, email from. These are
-# mandatory in the revision history.
-if [ ! -f ~/.publican.cfg ]; then
-    echo "Error: No ~/.publican.cfg found. This file is used to retrieve author information." 1>&2
-    exit 1
-fi
-
-# Collect values to be used for revision history entry.
-FIRSTNAME=`grep "^firstname: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
-SURNAME=`grep "^surname: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
-EMAIL=`grep "^email: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
-DATE=`date +"%a %b %d %Y"`
-COMMIT=`git log --pretty=format:"%H" -n 1`
-
-if [ -z "${FIRSTNAME}" ]; then
-    echo "Error: Unable to identify firstname key in ~/publican.cfg." 1>&2
-    exit 1
-fi
-
-if [ -z "${SURNAME}" ]; then
-    echo "Error: Unable to identify surname key in ~/publican.cfg." 1>&2
-    exit 1
-fi
-
-if [ -z "${EMAIL}" ]; then
-    echo "Error: Unable to identify email key in ~/publican.cfg." 1>&2
-    exit 1
-fi
-
-# We need pom.xml to work out the source directory for the book.
-if [ ! -f ./pom.xml ]; then
-    echo "Error: No pom.xml file in current directory." 1>&2
-    exit 1
-fi
-
-# Extract the source directory and book file name from pom.xml.
-SOURCE_DIR_RELA=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory.xsl`
-SOURCE_DIR_ABSL=`readlink -e ${SOURCE_DIR_RELA}`
-SOURCE_DIR_PARA=`dirname ${SOURCE_DIR_ABSL}`
-SOURCE_XML=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory-includes.xsl`
-
-if [ ! -d ${SOURCE_DIR_ABSL} ]; then
-    echo "Error: Unable to identify source dir (tried '${SOURCE_DIR_ABSL}')."
-    exit 1
-fi
-
-if [ ! -f ${SOURCE_DIR_ABSL}/${SOURCE_XML} ]; then
-    echo "Error: Unable to identify book file (tried '${SOURCE_XML}')."
-    exit 1
-fi
-
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":-:"
 OPT_BRAND=
@@ -226,6 +175,57 @@ while getopts "${OPTSPEC}" OPTCHAR; do
             ;;
     esac
 done
+
+# We need publican.cfg to extract firstname, surname, email from. These are
+# mandatory in the revision history.
+if [ ! -f ~/.publican.cfg ]; then
+    echo "Error: No ~/.publican.cfg found. This file is used to retrieve author information." 1>&2
+    exit 1
+fi
+
+# Collect values to be used for revision history entry.
+FIRSTNAME=`grep "^firstname: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
+SURNAME=`grep "^surname: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
+EMAIL=`grep "^email: " ~/.publican.cfg | cut -f 2 -d ':' | tr -d ' '`
+DATE=`date +"%a %b %d %Y"`
+COMMIT=`git log --pretty=format:"%H" -n 1`
+
+if [ -z "${FIRSTNAME}" ]; then
+    echo "Error: Unable to identify firstname key in ~/publican.cfg." 1>&2
+    exit 1
+fi
+
+if [ -z "${SURNAME}" ]; then
+    echo "Error: Unable to identify surname key in ~/publican.cfg." 1>&2
+    exit 1
+fi
+
+if [ -z "${EMAIL}" ]; then
+    echo "Error: Unable to identify email key in ~/publican.cfg." 1>&2
+    exit 1
+fi
+
+# We need pom.xml to work out the source directory for the book.
+if [ ! -f ./pom.xml ]; then
+    echo "Error: No pom.xml file in current directory." 1>&2
+    exit 1
+fi
+
+# Extract the source directory and book file name from pom.xml.
+SOURCE_DIR_RELA=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory.xsl`
+SOURCE_DIR_ABSL=`readlink -e ${SOURCE_DIR_RELA}`
+SOURCE_DIR_PARA=`dirname ${SOURCE_DIR_ABSL}`
+SOURCE_XML=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory-includes.xsl`
+
+if [ ! -d ${SOURCE_DIR_ABSL} ]; then
+    echo "Error: Unable to identify source dir (tried '${SOURCE_DIR_ABSL}')."
+    exit 1
+fi
+
+if [ ! -f ${SOURCE_DIR_ABSL}/${SOURCE_XML} ]; then
+    echo "Error: Unable to identify book file (tried '${SOURCE_XML}')."
+    exit 1
+fi
 
 # Set working directory, if the user specified one then use it otherwise
 # generate using mktemp.
