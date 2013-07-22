@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude">
 
+  <xsl:param name="common" />
+
   <!-- xsl variables up and lo and translate() are used to change case -->
   <xsl:variable name="up" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
   <xsl:variable name="lo" select="'abcdefghijklmnopqrstuvwxyz'"/>
@@ -492,7 +494,9 @@
     </xsl:attribute>
   </xsl:template>
 
-  <!-- Replace xi:include references with updated locations. -->
+  <!-- Replace xi:include references with updated locations, when processing
+       files in "common" some extra care is required - the caller indicates
+       when this is the case using the "common" parameter. -->
   <xsl:template match="xi:include[@href]">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
@@ -504,7 +508,14 @@
         </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*samples')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*samples','extras')" />
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@href,'^[\./]*samples','../extras/common')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="replace(@href,'^[\./]*samples','extras')" />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*common')">
@@ -527,7 +538,14 @@
       <xsl:choose>
         <xsl:when test="matches(@fileref, '^[\./]*figures')">
           <xsl:attribute name="fileref">
-            <xsl:value-of select="replace(@fileref,'^[\./]*figures','images')" />
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures','images/common')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures','images')" />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@fileref, '^[\./]*common/figures')">

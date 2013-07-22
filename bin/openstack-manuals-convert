@@ -290,14 +290,13 @@ fi
 # Transformations...till all are one!
 echo "Performing standard transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
-    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl > ${XML}.new
-    mv ${XML}.new ${XML}
-done
-
-# Transformations for files in "common" to get the correct images and extras.
-echo "Performing common content transformations."
-for XML in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
-    ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/common.xsl > ${XML}.new
+    echo ${XML} | grep "^${DEST_DIR_ABSL_SRC}/common/" > /dev/null
+    RESULT=$?
+    if [ "${RESULT}" -eq "0" ]; then
+      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl common="1" > ${XML}.new
+    else
+      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl > ${XML}.new
+    fi
     mv ${XML}.new ${XML}
 done
 
