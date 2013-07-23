@@ -216,6 +216,7 @@ SOURCE_DIR_RELA=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory.xsl`
 SOURCE_DIR_ABSL=`readlink -e ${SOURCE_DIR_RELA}`
 SOURCE_DIR_PARA=`dirname ${SOURCE_DIR_ABSL}`
 SOURCE_XML=`${XSLT_PROC} pom.xml ${XSLT_DIR}/extract/sourceDirectory-includes.xsl`
+SOURCE_BRANCH=`git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 
 if [ ! -d ${SOURCE_DIR_ABSL} ]; then
     echo "Error: Unable to identify source dir (tried '${SOURCE_DIR_ABSL}')."
@@ -377,6 +378,9 @@ fi
 if [ ! -z "${OPT_CONDITION}" ]; then
     echo "condition: ${OPT_CONDITION}" >> ${DEST_DIR_ABSL}/publican.cfg
 fi
+
+# Set web_version_label based on branch name.
+echo "web_version_label: ${SOURCE_BRANCH}" >> ${DEST_DIR_ABSL}/publican.cfg
 
 echo "Writing ${SOURCE_XML/\.xml/.ent}"
 cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/.ent} <<DELIM
