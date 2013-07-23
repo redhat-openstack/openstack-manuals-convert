@@ -125,8 +125,8 @@
           <xsl:otherwise>
             <xsl:element name="productnumber" namespace="http://docbook.org/ns/docbook">
               <xsl:text>1</xsl:text>
-            <xsl:text>&#10;</xsl:text>
             </xsl:element>
+            <xsl:text>&#10;</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
