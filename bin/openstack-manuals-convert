@@ -8,6 +8,7 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=955692
 
 XSLT_PROC=`which saxon`
+WGET="wget --no-check-certificate --quiet"
 
 # Location of XSLT to be used in transforms.
 DATA_DIR="/usr/share/openstack-manuals-convert"
@@ -287,10 +288,16 @@ fi
 if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
     mv ${DEST_DIR_ABSL_SRC}/common/samples ${DEST_DIR_ABSL_SRC}/extras/common
 fi
+mkdir -p ${DEST_DIR_ABSL_SRC}/extras/common/remote
 
 # Transformations...till all are one!
 echo "Performing standard transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
+    # Retrieve remotely hosted samples.
+    for REMOTE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-remote.xsl`; do
+      ${WGET} --directory-prefix=${DEST_DIR_ABSL_SRC}/extras/common/remote ${REMOTE}
+    done
+    # Check whether file is "common" content.
     echo ${XML} | grep "^${DEST_DIR_ABSL_SRC}/common/" > /dev/null
     RESULT=$?
     if [ "${RESULT}" -eq "0" ]; then

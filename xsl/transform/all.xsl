@@ -501,6 +501,11 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
+        <xsl:when test="matches(@href,'^http.*')">
+          <xsl:attribute name="href">
+            <xsl:value-of select="replace(@href,'^.*/','extras/common/remote/')" />
+          </xsl:attribute>
+        </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*common/samples')">
           <xsl:attribute name="href">
             <xsl:value-of select="replace(@href,'^[\./]*common/samples','extras/common/')" />
