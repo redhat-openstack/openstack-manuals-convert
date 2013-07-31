@@ -26,12 +26,12 @@ fi
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":-:"
 OPT_BRAND=
-OPT_CONDITION=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME="OpenStack"
 OPT_PRODUCT_NUMBER=1
+OPT_PROFILE=
 OPT_TITLE=
 OPT_SUBTITLE="Built with Publican"
 
@@ -46,8 +46,6 @@ Usage:
 Available OPTIONS:
 
   [--brand=BRAND]                  Override publican brand, default is \"common\".
-  [--condition=CONDITION]          Set value for \"condition\" directive, for
-                                   books that use conditional processing.
   [--config=CONFIG]                Provide a path to an alternative publican.cfg
                                    template.
   [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
@@ -56,6 +54,8 @@ Available OPTIONS:
   [--output=OUTPUT]                Provide a path to use for generated output.
   [--productname=PRODUCTNAME]      Override the product name used in the book.
   [--productnumber=PRODUCTNUMBER]  Override the product number used in the book.
+  [--profile=PROFILE]              Set profiling directives, e.g.:
+                                   \"condition: user,os: rhel\"
   [--title=TITLE]                  Override the title of the book.
   [--subtitle=SUBTITLE]            Override the subtitle of the book.
 "
@@ -81,11 +81,6 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     ;;
                 condition)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
-                    OPT_CONDITION="${VAL}"
-                    ;;
-                condition=*)
-                    VAL=${OPTARG#*=}
-                    OPT=${OPTARG%=$VAL}
                     OPT_CONDITION="${VAL}"
                     ;;
                 config)
@@ -136,6 +131,11 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_PRODUCT_NUMBER="${VAL}"
+                    ;;
+                profile=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_CONDITION="${VAL}"
                     ;;
                 title)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -381,9 +381,9 @@ else
 
 fi
 
-# If a condition was set then append it to the file.
-if [ ! -z "${OPT_CONDITION}" ]; then
-    echo "condition: ${OPT_CONDITION}" >> ${DEST_DIR_ABSL}/publican.cfg
+# If profiling values are set then append them to the file.
+if [ ! -z "${OPT_PROFILE}" ]; then
+    echo ${OPT_PROFILE} | tr "," "\n" | sed -e "s/^\s*//" >> ${DEST_DIR_ABSL}/publican.cfg
 fi
 
 # Set web_version_label based on branch name.
