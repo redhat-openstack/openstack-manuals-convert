@@ -13,7 +13,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="@os">
+  <xsl:template match="@audience">
     <xsl:attribute name="condition">
       <xsl:value-of select="."/>
     </xsl:attribute>
