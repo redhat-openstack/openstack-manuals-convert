@@ -3,7 +3,7 @@
 
   <xsl:output method="text" omit-xml-declaration="yes" indent="yes" />
 
-  <xsl:template match="m:plugin/m:configuration/m:includes">
+  <xsl:template match="m:plugin//m:configuration//m:includes">
     <xsl:value-of select="normalize-space(.)"/>
   </xsl:template>
 
