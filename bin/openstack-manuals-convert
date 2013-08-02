@@ -7,17 +7,21 @@
 # TODO: xml-commons-resolver
 # https://bugzilla.redhat.com/show_bug.cgi?id=955692
 
+# Set paths/options for XSLT processor and wget. Currently using
+# Saxon to handle XSL 2.0.
 XSLT_PROC=`which saxon`
 WGET="wget --no-check-certificate --quiet"
 
-# Location of XSLT to be used in transforms.
+# Set directories for obtaining XSL, XML templates, and CFG templates.
 DATA_DIR="/usr/share/openstack-manuals-convert"
 XSLT_DIR="${DATA_DIR}/xsl"
 XML_DIR="${DATA_DIR}/xml"
 CFG_DIR="${DATA_DIR}/cfg"
+
+# Get working directory.
 TOP_DIR=`pwd`
 
-# xsltproc executable must be available.
+# Check the XSLT processor is actually available.
 if [ -z ${XSLT_PROC} ]; then
     echo "Error: No saxon binary found. Install the saxon package." 1>&2
     exit 1
@@ -25,6 +29,9 @@ fi
 
 # Set the expected 'short' parameters, note the inclusion of '-'.
 OPTSPEC=":-:"
+
+# Initialize variables for parameters user may feed in. Set some default options
+# for the case whereby they dont.
 OPT_BRAND=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
@@ -254,7 +261,7 @@ echo "Copying content."
 cp -r ${SOURCE_DIR_ABSL}/* ${DEST_DIR_ABSL_SRC}
 cp -r `dirname ${TOP_DIR}`/common ${DEST_DIR_ABSL_SRC}/common
 
-# Clean up inadvertantly copied pom.xml files. They, result in spurious errors
+# Clean up inadvertantly copied pom.xml files. They result in spurious errors
 # from publican if left in the tree.
 for POM in `find ${DEST_DIR_ABSL_SRC} -name 'pom.xml'`; do
     rm ${POM}
@@ -293,11 +300,12 @@ mkdir -p ${DEST_DIR_ABSL_SRC}/extras/common/remote
 # Transformations...till all are one!
 echo "Performing standard transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
-    # Retrieve remotely hosted samples.
+    # Retrieve remotely hosted samples and bring them into the tree.
     for REMOTE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-remote.xsl`; do
       ${WGET} --directory-prefix=${DEST_DIR_ABSL_SRC}/extras/common/remote ${REMOTE}
     done
-    # Check whether file is "common" content.
+    # Check whether file is "common" content, if it is then the transforms need
+    # to behave slightly differently.
     echo ${XML} | grep "^${DEST_DIR_ABSL_SRC}/common/" > /dev/null
     RESULT=$?
     if [ "${RESULT}" -eq "0" ]; then
@@ -322,16 +330,14 @@ if [ ! -z "${OPT_CUSTOM_XSL}" ]; then
 fi
 
 # Now to check for other content which has been included from higher level
-# directories... We're going to work around this but also raise it as a
-# warning.
+# directories...
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     for INCLUDE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-xml.xsl`; do
         echo "WARNING: ${XML} includes ${INCLUDE}."
     done
 done
 
-
-# Copy common XML files. These will be injected into the book. Note that they
+# Copy template XML files. These will be injected into the book. Note that they
 # are copied after the common transformations are run intentionally. These are
 # expected to be "publican compatible" already.
 cp ${XML_DIR}/Preface.xml ${DEST_DIR_ABSL_SRC}/
