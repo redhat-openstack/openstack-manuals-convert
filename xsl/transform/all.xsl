@@ -2,6 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:d="http://docbook.org/ns/docbook" xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <xsl:param name="common" />
+  <xsl:param name="book" />
 
   <!-- xsl variables up and lo and translate() are used to change case -->
   <xsl:variable name="up" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
@@ -526,6 +527,18 @@
         <xsl:when test="matches(@href, '^[\./]*common')">
           <xsl:attribute name="href">
             <xsl:value-of select="replace(@href,'^[\./]*common','common')" />
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="matches(@href, concat('^[\./]*', $book))">
+          <xsl:attribute name="href">
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@href, concat('^[\./]*', $book), '../')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="replace(@href, concat('^[\./]*', $book), '')" />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
