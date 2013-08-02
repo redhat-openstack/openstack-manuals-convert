@@ -240,7 +240,12 @@ fi
 # generate using mktemp.
 DEST_DIR_ABSL=
 if [ -z "${OPT_OUTPUT}" ]; then
-    DEST_DIR_ABSL=`mktemp --directory --suffix=".publicanize"`
+    DEST_DIR_ABSL="${TOP_DIR}/target/publican"
+    if [ -d "${DEST_DIR_ABSL}" ]; then
+      rm -rf ${TOP_DIR}/target/publican/*
+    else
+      mkdir -p ${DEST_DIR_ABSL}
+    fi
 else
     if [ ! -d "${OPT_OUTPUT}" ]; then
         mkdir -p ${OPT_OUTPUT}

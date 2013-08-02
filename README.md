@@ -43,7 +43,7 @@ To run **openstack-manuals-convert**:
     $ cd openstack-manuals/**GUIDE**
     $ openstack-manuals-convert **[OPTIONS]**
 
-By default the Publican-friendly version of the guide will be output to a temporary directory.
+By default the Publican-friendly version of the guide will be output to **./target/publican/**.
 
 ### Publican RFEs
 
