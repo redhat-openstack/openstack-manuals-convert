@@ -583,4 +583,11 @@
   <!-- Strip revision history in rebase operation. -->
   <xsl:template match="d:revhistory"></xsl:template>
 
+  <!-- Remove computeroutput elements (treated as verbatim instead of inline
+       in clouddocs-maven. Unlike other dropped nodes ensure the content is
+       kept though. -->
+  <xsl:template match="d:computeroutput">
+    <xsl:copy-of select="child::* | child::node()" />
+  </xsl:template>
+
 </xsl:stylesheet>
