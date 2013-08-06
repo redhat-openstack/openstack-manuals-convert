@@ -263,7 +263,16 @@ echo "Destination Root file: ${DEST_DIR_ABSL}/en-US/${SOURCE_XML}"
 
 # Copy all content into working directories.
 echo "Copying content."
-cp -r ${SOURCE_DIR_ABSL}/* ${DEST_DIR_ABSL_SRC}
+
+# Copy the source XML, this would be a straight cp -r ${SOURCE_DIR_RELA}/* but
+# we need to ignore the 'target' directory in books where the source directory
+# is . instead of ./src.
+find ${SOURCE_DIR_RELA} -mindepth 1 \
+                        -maxdepth 1 \
+                        -path ${SOURCE_DIR_RELA}/target \
+                        -prune -o \
+                        -exec sh -c "cp -r {} ${DEST_DIR_ABSL_SRC}" \;
+# Copying the common content from one directory up is more straight forward.
 cp -r `dirname ${TOP_DIR}`/common ${DEST_DIR_ABSL_SRC}/common
 
 # Clean up inadvertantly copied pom.xml files. They result in spurious errors
