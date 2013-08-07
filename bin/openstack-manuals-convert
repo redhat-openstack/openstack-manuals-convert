@@ -425,8 +425,11 @@ DELIM
 # Remove unused XML files. These are largely files that were bulk copied with
 # common content but are not used in this specific book.
 cd ${DEST_DIR_ABSL}
-for FILE in `publican print_unused --nocolours | grep '\.xml$'`;
-    do rm ./en-US/${FILE};
+for FILE in `publican print_unused --nocolours | grep -i '\.xml$'`; do
+    rm -f ./en-US/${FILE};
+done
+for FILE in `publican print_unused_images --nocolours | grep -i -P '\.(png|svg)$'`; do
+    rm -f ./en-US/${FILE};
 done
 cd -
 
