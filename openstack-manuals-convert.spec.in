@@ -15,7 +15,7 @@ BuildRequires:  autoconf
 Requires:   bash
 Requires:   coreutils
 Requires:	saxon
-Requires:   publican >= 3.0.0
+Requires:   publican >= 3.2.0
 
 %description
 Convert openstack-manuals guides into a format suitable for building with
