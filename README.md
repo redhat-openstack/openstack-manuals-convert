@@ -51,5 +51,3 @@ These Publican RFEs have been raised, implementation of them will streamline the
 
 * [893199](https://bugzilla.redhat.com/893199) Add CSS to common-db5 for centering "author" tag (same styling as corpauthor in DocBook 4.5)
 * [953675](https://bugzilla.redhat.com/953675) XSL for abstract and subtitle detection assumes info element is root node of XML file (not always the case when using info file directive).
-* [953998](https://bugzilla.redhat.com/953998) RFE: publican.cfg directive for specifying/overriding 'extras' directory.
-* [919481](https://bugzilla.redhat.com/919481) RFE: Support changing images sub-directory name.
