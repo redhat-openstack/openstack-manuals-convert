@@ -432,9 +432,3 @@ for FILE in `publican print_unused_images --nocolours | grep -i -P '\.(png|svg)$
     rm -f ./en-US/${FILE};
 done
 cd -
-
-# Publican package has a bug that causes it to always look for a Book_Info.xml
-# file even when a different file is specified in the info_file directive. We
-# work around this with a symlink for now.
-# Refer: https://bugzilla.redhat.com/show_bug.cgi?id=957956
-ln -s ${SOURCE_XML} ${DEST_DIR_ABSL_SRC}/Book_Info.xml

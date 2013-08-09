@@ -51,10 +51,5 @@ These Publican RFEs have been raised, implementation of them will streamline the
 
 * [893199](https://bugzilla.redhat.com/893199) Add CSS to common-db5 for centering "author" tag (same styling as corpauthor in DocBook 4.5)
 * [953675](https://bugzilla.redhat.com/953675) XSL for abstract and subtitle detection assumes info element is root node of XML file (not always the case when using info file directive).
-* [953618](https://bugzilla.redhat.com/953618) Non-ASCII characters in image file names get mangled in publish
-* [919486](https://bugzilla.redhat.com/919486) RFE: Support all DocBook conditionals
 * [953998](https://bugzilla.redhat.com/953998) RFE: publican.cfg directive for specifying/overriding 'extras' directory.
 * [919481](https://bugzilla.redhat.com/919481) RFE: Support changing images sub-directory name.
-* [957956](https://bugzilla.redhat.com/957956) get keywords always looks for a file named <type> Info.xml even when info file set.
-* [919474](https://bugzilla.redhat.com/919474) RFE: Ability to use case-insensitive "language" attributes on programlistings for compatibility with other docbook projects.
-* [958495](https://bugzilla.redhat.com/958495) Running publican package on a DB5 book results in SRPM that depends on non-existent "publican-common-db5" package.
