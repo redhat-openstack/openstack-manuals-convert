@@ -44,22 +44,22 @@
       <xsl:choose>
         <xsl:when test="matches(@href,'^http.*')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^.*/','extras/common/remote/')" />
+            <xsl:value-of select="replace(@href,'^.*/','samples/common/remote/')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*common/samples')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*common/samples','extras/common/')" />
+            <xsl:value-of select="replace(@href,'^[\./]*common/samples','samples/common/')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@href, '^[\./]*samples')">
           <xsl:attribute name="href">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@href,'^[\./]*samples','../extras/common')" />
+                <xsl:value-of select="replace(@href,'^[\./]*samples','../samples/common')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@href,'^[\./]*samples','extras')" />
+                <xsl:value-of select="replace(@href,'^[\./]*samples','samples')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
@@ -90,7 +90,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Replace references to "figures" directory with references to "images". -->
+  <!-- Replace references to "figures" directory with references to "figures". -->
   <xsl:template match="d:imagedata[@fileref]">
     <xsl:copy>
       <xsl:choose>
@@ -98,17 +98,17 @@
           <xsl:attribute name="fileref">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@fileref,'^[\./]*figures','images/common')" />
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures','figures/common')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@fileref,'^[\./]*figures','images')" />
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures','figures')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@fileref, '^[\./]*common/figures')">
           <xsl:attribute name="fileref">
-            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures','images/common')" />
+            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures','figures/common')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>

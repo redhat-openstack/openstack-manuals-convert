@@ -290,26 +290,21 @@ else
     mkdir ${DEST_DIR_ABSL_SRC}/pot
 fi
 
-if [ -d "${DEST_DIR_ABSL_SRC}/figures" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/figures ${DEST_DIR_ABSL_SRC}/images
-else
-    mkdir ${DEST_DIR_ABSL_SRC}/images
-fi
+# Create the figures and samples directories if they don't already exist.
+mkdir -p ${DEST_DIR_ABSL_SRC}/figures
+mkdir -p ${DEST_DIR_ABSL_SRC}/samples
 
-if [ -d "${DEST_DIR_ABSL_SRC}/samples" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/samples ${DEST_DIR_ABSL_SRC}/extras
-else
-    mkdir ${DEST_DIR_ABSL_SRC}/extras
-fi
-
+# Copy the figures and samples from /common to /common/figures and
+# /common/samples respectively. Failure to do this would ultimately
+# result in them being missed when building.
 if [ -d "${DEST_DIR_ABSL_SRC}/common/figures" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/images/common
+    mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/figures/common
 fi
 
 if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/common/samples ${DEST_DIR_ABSL_SRC}/extras/common
+    mv ${DEST_DIR_ABSL_SRC}/common/samples ${DEST_DIR_ABSL_SRC}/samples/common
 fi
-mkdir -p ${DEST_DIR_ABSL_SRC}/extras/common/remote
+mkdir -p ${DEST_DIR_ABSL_SRC}/samples/common/remote
 
 # Transformations...till all are one!
 echo "Performing standard transformations."
@@ -321,7 +316,7 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
 
     # Retrieve remotely hosted samples and bring them into the tree.
     for REMOTE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-remote.xsl`; do
-      ${WGET} --directory-prefix=${DEST_DIR_ABSL_SRC}/extras/common/remote ${REMOTE}
+      ${WGET} --directory-prefix=${DEST_DIR_ABSL_SRC}/samples/common/remote ${REMOTE}
     done
     # Check whether file is "common" content, if it is then the transforms need
     # to behave slightly differently.
@@ -399,11 +394,10 @@ sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 # If a brand was set use it, otherwise use common-db5 by default.
 if [ ! -z "${OPT_BRAND}" ]; then
     sed -i -e "s/BRAND/${OPT_BRAND}/g" ${DEST_DIR_ABSL}/publican.cfg
-    cp /usr/share/publican/Common_Content/${OPT_BRAND}/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
+    cp /usr/share/publican/Common_Content/${OPT_BRAND}/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/figures/icon.svg
 else
     sed -i -e "s/BRAND/common-db5/g" ${DEST_DIR_ABSL}/publican.cfg
-    cp /usr/share/publican/Common_Content/common-db5/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
-
+    cp /usr/share/publican/Common_Content/common-db5/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/figures/icon.svg
 fi
 
 # If profiling values are set then append them to the file.
