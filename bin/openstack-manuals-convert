@@ -422,7 +422,7 @@ cd ${DEST_DIR_ABSL}
 for FILE in `publican print_unused --nocolours | grep -i '\.xml$'`; do
     rm -f ./en-US/${FILE};
 done
-for FILE in `publican print_unused_images --nocolours | grep -i -P '\.(png|svg)$'`; do
+for FILE in `publican print_unused_images --nocolours | grep -i -P '\.(png|svg|jpg|jpeg)$'`; do
     rm -f ./en-US/${FILE};
 done
 cd -
