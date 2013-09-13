@@ -419,7 +419,7 @@ DELIM
 # Remove unused XML files. These are largely files that were bulk copied with
 # common content but are not used in this specific book.
 # Disabled as a result of https://bugzilla.redhat.com/show_bug.cgi?id=1004955
-#cd ${DEST_DIR_ABSL}
+cd ${DEST_DIR_ABSL}
 #for FILE in `publican print_unused --nocolours | grep -i '\.xml$'`; do
 #    rm -f ./en-US/${FILE};
 #done
