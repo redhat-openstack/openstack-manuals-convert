@@ -312,7 +312,12 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     # Work out where the content sits in relation to the rest of the repository,
     # this is then used in the XSL to eliminate some cases where common content
     # includes content from the guide. The xi:includes are then updated to suit.
-    BOOK_DIR=`basename ${TOP_DIR}`"/${SOURCE_DIR_RELA}/"
+    BOOK_DIR=
+    if [ "${SOURCE_DIR_RELA}" = "." ]; then
+        BOOK_DIR=`basename ${TOP_DIR}`
+    else
+        BOOK_DIR=`basename ${TOP_DIR}`"/${SOURCE_DIR_RELA}/"
+    fi
 
     # Retrieve remotely hosted samples and bring them into the tree.
     for REMOTE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-remote.xsl`; do
