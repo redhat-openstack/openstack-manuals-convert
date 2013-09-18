@@ -43,11 +43,16 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()" />
       <xsl:choose>
+        <!-- Remote samples (typically included from GIT) need are downloaded
+             by the parent script and placed in a fixed directory. This XSL
+             updates the relevant xi:includes to point to the new location. -->
         <xsl:when test="matches(@href,'^http.*')">
           <xsl:attribute name="href">
             <xsl:value-of select="replace(@href,'^.*/','samples/common/remote/')" />
           </xsl:attribute>
         </xsl:when>
+        <!-- All other samples are also in a location under the top level
+             samples directory. -->
         <xsl:when test="matches(@href, '^[\./]*common/samples')">
           <xsl:attribute name="href">
             <xsl:value-of select="replace(@href,'^[\./]*common/samples','samples/common/')" />
@@ -65,6 +70,8 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
+        <!-- Update xi:includes that point to common content, catering to the
+             fact that common content has been moved. -->
         <xsl:when test="matches(@href, '^[\./]*common')">
           <xsl:attribute name="href">
             <xsl:value-of select="replace(@href,'^[\./]*common','common')" />
@@ -82,6 +89,7 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
+        <!-- Any other xi:includes are passed straight through. -->
         <xsl:otherwise>
           <xsl:attribute name="href">
             <xsl:value-of select="@href" />
