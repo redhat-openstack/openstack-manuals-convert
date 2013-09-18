@@ -72,19 +72,26 @@
         </xsl:when>
         <!-- Update xi:includes that point to common content, catering to the
              fact that common content has been moved. -->
-        <xsl:when test="matches(@href, '^[\./]*common')">
-          <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*common','common')" />
-          </xsl:attribute>
-        </xsl:when>
-        <xsl:when test="matches(@href, concat('^[\./]*', $book))">
+        <xsl:when test="matches(@href, '\.\./common')">
           <xsl:attribute name="href">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@href, concat('^[\./]*', $book), '../')" />
+                <xsl:value-of select="replace(@href,'\.\./common','.')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@href, concat('^[\./]*', $book), '')" />
+                <xsl:value-of select="replace(@href,'\.\./common','common')" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="matches(@href, concat('\.\./', $book))">
+          <xsl:attribute name="href">
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@href, concat('\.\./', $book), '../')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="replace(@href, concat('\.\./', $book), '')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
