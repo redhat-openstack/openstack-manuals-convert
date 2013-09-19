@@ -48,50 +48,69 @@
              updates the relevant xi:includes to point to the new location. -->
         <xsl:when test="matches(@href,'^http.*')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^.*/','samples/common/remote/')" />
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@href,'^.*/','../samples/common/remote/')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="replace(@href,'^.*/','samples/common/remote/')" />
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <!-- All other samples are also in a location under the top level
              samples directory. -->
-        <xsl:when test="matches(@href, '^[\./]*common/samples')">
+        <xsl:when test="matches(@href, '\.\./common/samples/')">
           <xsl:attribute name="href">
-            <xsl:value-of select="replace(@href,'^[\./]*common/samples','samples/common/')" />
+            <xsl:value-of select="replace(@href,'\.\./common/samples/','samples/common/')" />
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="matches(@href, '^[\./]*samples')">
+        <xsl:when test="matches(@href, '\.\./samples/')">
           <xsl:attribute name="href">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@href,'^[\./]*samples','../samples/common')" />
+                <xsl:value-of select="replace(@href,'\.\./samples/','../samples/common/')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@href,'^[\./]*samples','samples')" />
+                <xsl:value-of select="@href" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:when test="matches(@href, '^samples/')">
+          <xsl:attribute name="href">
+            <xsl:choose>
+              <xsl:when test="$common = '1'">
+                <xsl:value-of select="replace(@href,'^samples/','../samples/common/')" />
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@href" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <!-- Update xi:includes that point to common content, catering to the
              fact that common content has been moved. -->
-        <xsl:when test="matches(@href, '\.\./common')">
+        <xsl:when test="matches(@href, '\.\./common/')">
           <xsl:attribute name="href">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@href,'\.\./common','.')" />
+                <xsl:value-of select="replace(@href,'\.\./common/','')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@href,'\.\./common','common')" />
+                <xsl:value-of select="replace(@href,'\.\./common/','common/')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="matches(@href, concat('\.\./', $book))">
+        <xsl:when test="matches(@href, concat('\.\./', $book, '/'))">
           <xsl:attribute name="href">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@href, concat('\.\./', $book), '../')" />
+                <xsl:value-of select="replace(@href, concat('\.\./', $book, '/'), '../')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@href, concat('\.\./', $book), '')" />
+                <xsl:value-of select="replace(@href, concat('\.\./', $book, '/'), '')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
@@ -110,11 +129,11 @@
   <xsl:template match="d:imagedata[@fileref]">
     <xsl:copy>
       <xsl:choose>
-        <xsl:when test="matches(@fileref, '^[\./]*figures')">
+        <xsl:when test="matches(@fileref, '^[\./]*figures/')">
           <xsl:attribute name="fileref">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@fileref,'^[\./]*figures','figures/common')" />
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures/','figures/common/')" />
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="replace(@fileref,'^[\./]*figures','figures')" />
@@ -122,9 +141,9 @@
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
-        <xsl:when test="matches(@fileref, '^[\./]*common/figures')">
+        <xsl:when test="matches(@fileref, '^[\./]*common/figures/')">
           <xsl:attribute name="fileref">
-            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures','figures/common')" />
+            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures/','figures/common/')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
