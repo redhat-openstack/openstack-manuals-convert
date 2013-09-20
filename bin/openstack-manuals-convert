@@ -261,9 +261,6 @@ echo "Source Root file: ${SOURCE_DIR_ABSL}/${SOURCE_XML}"
 echo "Destination: ${DEST_DIR_ABSL}"
 echo "Destination Root file: ${DEST_DIR_ABSL}/en-US/${SOURCE_XML}"
 
-# Copy all content into working directories.
-echo "Copying content."
-
 # Copy the source XML, this would be a straight cp -r ${SOURCE_DIR_RELA}/* but
 # we need to ignore the 'target' directory in books where the source directory
 # is . instead of ./src.
@@ -325,8 +322,13 @@ for FILE in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
 done
 
 # Transformations...till all are one!
-echo "Performing standard transformations."
+FILES_TRANSFORM_REQUIRED=`find ${DEST_DIR_ABSL_SRC} -name '*.xml' | wc -l`
+FILES_TRANSFORM_DONE=0
+
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
+
+    echo -ne "Performing standard transformations (${FILES_TRANSFORM_DONE}/${FILES_TRANSFORM_REQUIRED}).\r"
+
     # Work out where the content sits in relation to the rest of the repository,
     # this is then used in the XSL to eliminate some cases where common content
     # includes content from the guide. The xi:includes are then updated to suit.
@@ -351,11 +353,19 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
       ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl book="${BOOK_DIR}" > ${XML}.new
     fi
     mv ${XML}.new ${XML}
+
+    FILES_TRANSFORM_DONE=$((${FILES_TRANSFORM_DONE} + 1))
+
 done
+echo -ne '\n'
 
 # Transformations for "custom" XSL to be applied (if provided).
 if [ ! -z "${OPT_CUSTOM_XSL}" ]; then
-    echo "Performing custom transformations from '${OPT_CUSTOM_XSL}'."
+
+    FILES_TRANSFORM_REQUIRED=`find ${DEST_DIR_ABSL_SRC} -name '*.xml' | wc -l`
+    FILES_TRANSFORM_DONE=0
+
+    echo -ne "Performing custom transformations from '${OPT_CUSTOM_XSL}' (${FILES_TRANSFORM_DONE}/${FILES_TRANSFORM_REQUIRED}).\r"
     if [ ! -f "${OPT_CUSTOM_XSL}" ]; then
         echo "ERROR: Custom XSL file '${OPT_CUSTOM_XSL}' does not exist."  >&2
         exit 1
@@ -365,6 +375,7 @@ if [ ! -z "${OPT_CUSTOM_XSL}" ]; then
         mv ${XML}.new ${XML}
     done
 fi
+echo -ne '\n'
 
 # Copy template XML files. These will be injected into the book. Note that they
 # are copied after the common transformations are run intentionally. These are
