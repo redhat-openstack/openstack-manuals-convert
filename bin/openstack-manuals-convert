@@ -306,6 +306,24 @@ if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
 fi
 mkdir -p ${DEST_DIR_ABSL_SRC}/samples/common/remote
 
+# Perform a "dumb" prune of common XML files that are not referred to by any
+# other files in the tree. This is done because we blindly include all of common
+# and can't use publican print_unused until *after* transformation. Note that
+# the aim is only to pick up *most* unused files in a relatively fast fashion,
+# bringing down transformation time. Elimination of unused content can be done
+# using print_unused post-transformation.
+for FILE in `find ${DEST_DIR_ABSL_SRC}/common -name '*.xml'`; do
+
+    FILE_BASE=`basename ${FILE}`
+
+    grep -r ${FILE_BASE} ${DEST_DIR_ABSL_SRC}/* > /dev/null
+    RESULT=$?
+    if [ "${RESULT}" -eq "1" ]; then
+        rm ${FILE}
+    fi
+
+done
+
 # Transformations...till all are one!
 echo "Performing standard transformations."
 for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
