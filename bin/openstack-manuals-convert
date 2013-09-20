@@ -348,14 +348,6 @@ if [ ! -z "${OPT_CUSTOM_XSL}" ]; then
     done
 fi
 
-# Now to check for other content which has been included from higher level
-# directories...
-for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
-    for INCLUDE in `${XSLT_PROC} ${XML} ${XSLT_DIR}/extract/xiincludes-xml.xsl`; do
-        echo "WARNING: ${XML} includes ${INCLUDE}."
-    done
-done
-
 # Copy template XML files. These will be injected into the book. Note that they
 # are copied after the common transformations are run intentionally. These are
 # expected to be "publican compatible" already.
