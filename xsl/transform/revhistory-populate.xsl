@@ -7,6 +7,7 @@
    <xsl:param name="email" />
    <xsl:param name="commit" />
    <xsl:param name="productnumber" />
+   <xsl:param name="revision" />
 
    <xsl:template match="@*|node()">
      <xsl:copy>
@@ -16,7 +17,7 @@
 
    <xsl:template match="d:revision/d:revnumber">
      <xsl:element name="revnumber" namespace="http://docbook.org/ns/docbook">
-       <xsl:value-of select="$productnumber"/><xsl:text>-1</xsl:text>
+       <xsl:value-of select="$productnumber"/><xsl:text>-</xsl:text><xsl:value-of select="$revision"/>
      </xsl:element>
    </xsl:template>
 

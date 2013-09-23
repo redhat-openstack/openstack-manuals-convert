@@ -40,8 +40,9 @@ OPT_OUTPUT=
 OPT_PRODUCT_NAME="OpenStack"
 OPT_PRODUCT_NUMBER=1
 OPT_PROFILE=
-OPT_TITLE=
+OPT_REVISION=`date +"%Y%m%d"`
 OPT_SUBTITLE="Built with Publican"
+OPT_TITLE=
 
 function usage {
 
@@ -65,8 +66,13 @@ Available OPTIONS:
   [--productnumber=PRODUCTNUMBER]  Override the product number used in the book.
   [--profile=PROFILE]              Set profiling directives, e.g.:
                                    \"condition: user,os: rhel\"
-  [--title=TITLE]                  Override the title of the book.
+  [--revision=REVISION]            Override the revision of the book,
+                                   default is of the form:
+
+                                       PRODUCTNUMBER-YYYYMMDD.
+
   [--subtitle=SUBTITLE]            Override the subtitle of the book.
+  [--title=TITLE]                  Override the title of the book.
 "
 
 }
@@ -155,14 +161,14 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     OPT=${OPTARG%=$VAL}
                     OPT_PROFILE="${VAL}"
                     ;;
-                title)
+                revision)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
-                    OPT_TITLE="${VAL}"
+                    OPT_REVISION="${VAL}"
                     ;;
-                title=*)
+                revision=*)
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
-                    OPT_TITLE="${VAL}"
+                    OPT_REVISION="${VAL}"
                     ;;
                 subtitle)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -172,6 +178,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_SUBTITLE="${VAL}"
+                    ;;
+                title)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_TITLE="${VAL}"
+                    ;;
+                title=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_TITLE="${VAL}"
                     ;;
                 *)
                     if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
@@ -403,7 +418,8 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/Revision_History.xml ${XSLT_DIR}/transform/rev
              surname="${SURNAME}" \
              email="${EMAIL}" \
              commit="${COMMIT}" \
-             productnumber="${OPT_PRODUCT_NUMBER}" > ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new
+             productnumber="${OPT_PRODUCT_NUMBER}" \
+             revision="${OPT_REVISION}" > ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new
 mv ${DEST_DIR_ABSL_SRC}/Revision_History.xml.new ${DEST_DIR_ABSL_SRC}/Revision_History.xml
 
 echo "Performing book file transformations."
