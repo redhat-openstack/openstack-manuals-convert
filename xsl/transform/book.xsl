@@ -3,6 +3,7 @@
 
   <xsl:param name="title" />
   <xsl:param name="subtitle" />
+  <xsl:param name="abstract" />
 
   <xsl:param name="productname" />
   <xsl:param name="productnumber" />
@@ -28,10 +29,10 @@
     </xsl:element>
   </xsl:template>
 
-  <!-- If title, subtitle productname or productnumber elements exist, and values were
-       provided as parameters, then update the elements with the values. Note that
-       we do make an exception for title and assume that the source material will
-       always have this node.-->
+  <!-- If title, subtitle productname abstract, or productnumber elements exist,
+       and values were provided as parameters, then update the elements with the
+       values. Note that we do make an exception for title and assume that the
+       source material will always have this node.-->
   <xsl:template match="d:book/d:title | d:book/d:info/d:title">
     <xsl:choose>
       <xsl:when test="$title != ''">
@@ -92,7 +93,22 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- Inject preface after end of book info, inject productname and
+  <xsl:template match="d:book/d:abstract | d:book/d:info/d:abstract">
+    <xsl:choose>
+      <xsl:when test="$abstract != ''">
+        <xsl:element name="abstract" namespace="http://docbook.org/ns/docbook">
+          <xsl:value-of select="$abstract"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Inject preface after end of book info, inject productname, abstract and
        productnumber if they didn't already exist (if they do exist then they
        are updated in the previous step). -->
   <xsl:template match="d:book/d:info">
@@ -129,6 +145,14 @@
             <xsl:text>&#10;</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
+      </xsl:if>
+      <xsl:if test="not(//d:abstract)">
+          <xsl:if test="$abstract != ''">
+            <xsl:element name="abstract" namespace="http://docbook.org/ns/docbook">
+              <xsl:value-of select="$abstract" />
+            </xsl:element>
+            <xsl:text>&#10;</xsl:text>
+          </xsl:if>
       </xsl:if>
     </xsl:copy>
     <xsl:element name="xi:include">

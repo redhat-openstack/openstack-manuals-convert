@@ -32,6 +32,7 @@ OPTSPEC=":-:"
 
 # Initialize variables for parameters user may feed in. Set some default options
 # for the case whereby they dont.
+OPT_ABSTRACT=
 OPT_BRAND=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
@@ -52,6 +53,7 @@ Usage:
 
 Available OPTIONS:
 
+  [--abstract=ABSTRACT]            Override the abstract used in the book.
   [--brand=BRAND]                  Override publican brand, default is \"common\".
   [--config=CONFIG]                Provide a path to an alternative publican.cfg
                                    template.
@@ -77,6 +79,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
         # leading '-').
         -)
             case "${OPTARG}" in
+                abstract)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_ABSTRACT="${VAL}"
+                    ;;
+                abstract=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_ABSTRACT="${VAL}"
+                    ;;
                 brand)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
                     OPT_BRAND="${VAL}"
@@ -401,6 +412,7 @@ ${XSLT_PROC} ${DEST_DIR_ABSL_SRC}/${SOURCE_XML} ${XSLT_DIR}/transform/book.xsl \
              productnumber="${OPT_PRODUCT_NUMBER}" \
              title="${OPT_TITLE}" \
              subtitle="${OPT_SUBTITLE}" \
+             abstract="${OPT_ABSTRACT}" \
              > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new
 mv ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}.new ${DEST_DIR_ABSL_SRC}/${SOURCE_XML}
 
