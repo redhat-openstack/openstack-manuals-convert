@@ -25,7 +25,9 @@
   <xsl:template match="@language">
     <xsl:attribute name="language">
       <xsl:choose>
-        <xsl:when test="translate(.,$lo,$up) = 'INI'"></xsl:when>
+        <xsl:when test="translate(.,$lo,$up) = 'INI'">
+            <xsl:text>INI Files</xsl:text>
+        </xsl:when>
         <xsl:when test="translate(.,$lo,$up) = 'JSON'">
           <xsl:text>JavaScript</xsl:text>
         </xsl:when>
