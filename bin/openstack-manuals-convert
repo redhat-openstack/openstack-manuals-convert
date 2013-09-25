@@ -313,15 +313,21 @@ else
     mkdir ${DEST_DIR_ABSL_SRC}/pot
 fi
 
-# Create the figures and samples directories if they don't already exist.
-mkdir -p ${DEST_DIR_ABSL_SRC}/figures
+# Create the samples directories if it doesn't already exist.
 mkdir -p ${DEST_DIR_ABSL_SRC}/samples
+
+# Move figures to images.
+if [ -d "${DEST_DIR_ABSL_SRC}/figures" ]; then
+    mv ${DEST_DIR_ABSL_SRC}/figures ${DEST_DIR_ABSL}/images
+else
+    mkdir ${DEST_DIR_ABSL_SRC}/images
+fi
 
 # Copy the figures and samples from /common to /common/figures and
 # /common/samples respectively. Failure to do this would ultimately
 # result in them being missed when building.
 if [ -d "${DEST_DIR_ABSL_SRC}/common/figures" ]; then
-    mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/figures/common
+    mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/images/common
 fi
 
 if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
@@ -448,10 +454,10 @@ sed -i -e "s/SOURCE_XML/${SOURCE_XML%.*}/g" ${DEST_DIR_ABSL}/publican.cfg
 # If a brand was set use it, otherwise use common-db5 by default.
 if [ ! -z "${OPT_BRAND}" ]; then
     sed -i -e "s/BRAND/${OPT_BRAND}/g" ${DEST_DIR_ABSL}/publican.cfg
-    cp /usr/share/publican/Common_Content/${OPT_BRAND}/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/figures/icon.svg
+    cp /usr/share/publican/Common_Content/${OPT_BRAND}/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
 else
     sed -i -e "s/BRAND/common-db5/g" ${DEST_DIR_ABSL}/publican.cfg
-    cp /usr/share/publican/Common_Content/common-db5/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/figures/icon.svg
+    cp /usr/share/publican/Common_Content/common-db5/en-US/images/title_logo.svg ${DEST_DIR_ABSL_SRC}/images/icon.svg
 fi
 
 # If profiling values are set then append them to the file.

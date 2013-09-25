@@ -135,17 +135,17 @@
           <xsl:attribute name="fileref">
             <xsl:choose>
               <xsl:when test="$common = '1'">
-                <xsl:value-of select="replace(@fileref,'^[\./]*figures/','figures/common/')" />
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures/','images/common/')" />
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="replace(@fileref,'^[\./]*figures','figures')" />
+                <xsl:value-of select="replace(@fileref,'^[\./]*figures','images')" />
               </xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:when>
         <xsl:when test="matches(@fileref, '^[\./]*common/figures/')">
           <xsl:attribute name="fileref">
-            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures/','figures/common/')" />
+            <xsl:value-of select="replace(@fileref,'^[\./]*common/figures/','images/common/')" />
           </xsl:attribute>
         </xsl:when>
         <xsl:otherwise>
