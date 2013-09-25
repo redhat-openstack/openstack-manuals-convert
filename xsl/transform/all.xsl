@@ -167,4 +167,23 @@
     <xsl:copy-of select="child::* | child::node()" />
   </xsl:template>
 
+  <!-- Turn olinks within the document into xref's leave, others as is for
+       now. -->
+  <xsl:template match="d:olink">
+    <xsl:choose>
+      <xsl:when test="@targetdoc = '$book'">
+        <xsl:element name="xref">
+          <xsl:attribute name="linkend">
+            <xsl:value-of select="@targetptr" />
+          </xsl:attribute>
+        </xsl:element>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:apply-templates select="node()|@*"/>
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
