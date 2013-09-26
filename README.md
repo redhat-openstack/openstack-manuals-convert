@@ -13,7 +13,7 @@ As **openstack-manuals-convert** is designed primarily for use with the guides c
 ## Prerequisites
 
 * Bash.
-* Publican 3.2.
+* Publican 3.2.1+.
 * Saxon XSLT 2.0 processor.
 * ~/.publican.cfg file containing firstname, surname, and email information, This
   is used to generate a revision history entry.
