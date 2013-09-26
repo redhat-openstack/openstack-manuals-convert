@@ -36,6 +36,7 @@ OPT_ABSTRACT=
 OPT_BRAND=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
+OPT_IMAGE_DIR=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME="OpenStack"
 OPT_PRODUCT_NUMBER=1
@@ -61,6 +62,9 @@ Available OPTIONS:
   [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
                                    to apply to each XML file processed.
   [--help]                         Display usage information.
+  [--images=IMAGEDIR]              Override the images used in the book with
+                                   those in IMAGEDIR. Directory structure and
+                                   image file names must match.
   [--output=OUTPUT]                Provide a path to use for generated output.
   [--productname=PRODUCTNAME]      Override the product name used in the book.
   [--productnumber=PRODUCTNUMBER]  Override the product number used in the book.
@@ -124,6 +128,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                 help)
                     usage
                     exit 0
+                    ;;
+                images)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_IMAGE_DIR=`echo ${VAL}`
+                    ;;
+                images=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_IMAGE_DIR=`echo ${VAL}`
                     ;;
                 output)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -323,9 +336,7 @@ else
     mkdir ${DEST_DIR_ABSL_SRC}/images
 fi
 
-# Copy the figures and samples from /common to /common/figures and
-# /common/samples respectively. Failure to do this would ultimately
-# result in them being missed when building.
+# Copy the figures and samples from ./common to ./common
 if [ -d "${DEST_DIR_ABSL_SRC}/common/figures" ]; then
     mv ${DEST_DIR_ABSL_SRC}/common/figures ${DEST_DIR_ABSL_SRC}/images/common
 fi
@@ -334,6 +345,15 @@ if [ -d "${DEST_DIR_ABSL_SRC}/common/samples" ]; then
     mv ${DEST_DIR_ABSL_SRC}/common/samples ${DEST_DIR_ABSL_SRC}/samples/common
 fi
 mkdir -p ${DEST_DIR_ABSL_SRC}/samples/common/remote
+
+# Apply image overrides. It's expected that the directory structure and file
+# names match the images being overridden. No checks of this are done but if
+# they don't then the fileref attributes in the XML wont pick them up.
+if [ ! -z "${OPT_IMAGE_DIR}" ]; then
+  if [ -d "${OPT_IMAGE_DIR}" ]; then
+    cp -r ${OPT_IMAGE_DIR}/* ${DEST_DIR_ABSL_SRC}/images/
+  fi
+fi
 
 # Perform a "dumb" prune of common XML files that are not referred to by any
 # other files in the tree. This is done because we blindly include all of common
