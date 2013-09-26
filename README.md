@@ -47,8 +47,11 @@ By default the Publican-friendly version of the guide will be output to **./targ
 
 ## Options
 
-  openstack-manuals-convert [OPTIONS]
+Usage:
 
+    openstack-manuals-convert [OPTIONS]
+
+````
 Available OPTIONS:
 
   [--abstract=ABSTRACT]            Override the abstract used in the book.
@@ -73,6 +76,7 @@ Available OPTIONS:
 
   [--subtitle=SUBTITLE]            Override the subtitle of the book.
   [--title=TITLE]                  Override the title of the book.
+````
 
 ### Publican RFEs
 
