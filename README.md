@@ -78,6 +78,15 @@ Available OPTIONS:
   [--title=TITLE]                  Override the title of the book.
 ````
 
+Example:
+
+````
+$ openstack-manuals-convert --brand="publican-fedora" \
+                            --productname="Fedora" \
+                            --productnumber="20"
+                            --title="OpenStack User Guide"
+````
+
 ### Publican RFEs
 
 These Publican RFEs have been raised, implementation of them will streamline the conversion and packaging process:
