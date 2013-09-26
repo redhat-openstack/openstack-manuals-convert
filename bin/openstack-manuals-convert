@@ -33,6 +33,7 @@ OPTSPEC=":-:"
 # Initialize variables for parameters user may feed in. Set some default options
 # for the case whereby they dont.
 OPT_ABSTRACT=
+OPT_BLACKLIST=
 OPT_BRAND=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
@@ -56,6 +57,15 @@ Usage:
 Available OPTIONS:
 
   [--abstract=ABSTRACT]            Override the abstract used in the book.
+  [--blacklist=BLACKLIST]          Blacklist XML files that match the list of
+                                   files in the BLACKLIST file. The file is of
+                                   the format:
+                                   <blacklist>
+                                     <entry file='FILE.xml' />
+                                   </blacklist>
+                                   Inclusion of files matching the provided
+                                   name, regardless of path, will be removed.
+                                   Images may be blacklisted in the same way.
   [--brand=BRAND]                  Override publican brand, default is \"common\".
   [--config=CONFIG]                Provide a path to an alternative publican.cfg
                                    template.
@@ -97,6 +107,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_ABSTRACT="${VAL}"
+                    ;;
+                blacklist)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_BLACKLIST="${VAL}"
+                    ;;
+                blacklist=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_BLACKLIST="${VAL}"
                     ;;
                 brand)
                     VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
@@ -400,9 +419,14 @@ for XML in `find ${DEST_DIR_ABSL_SRC} -name '*.xml'`; do
     echo ${XML} | grep "^${DEST_DIR_ABSL_SRC}/common/" > /dev/null
     RESULT=$?
     if [ "${RESULT}" -eq "0" ]; then
-      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl common="1" book="${BOOK_DIR}" > ${XML}.new
+      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl common="1" \
+                                                        book="${BOOK_DIR}" \
+                                                        blacklist=${OPT_BLACKLIST} \
+                                                        > ${XML}.new
     else
-      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl book="${BOOK_DIR}" > ${XML}.new
+      ${XSLT_PROC} ${XML} ${XSLT_DIR}/transform/all.xsl book="${BOOK_DIR}" \
+                                                        blacklist=${OPT_BLACKLIST} \
+                                                        > ${XML}.new
     fi
     mv ${XML}.new ${XML}
 

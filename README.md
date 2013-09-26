@@ -55,6 +55,15 @@ Usage:
 Available OPTIONS:
 
   [--abstract=ABSTRACT]            Override the abstract used in the book.
+  [--blacklist=BLACKLIST]          Blacklist XML files that match the list of
+                                   files in the BLACKLIST file. The file is of
+                                   the format:
+                                   <blacklist>
+                                     <entry file='FILE.xml' />
+                                   </blacklist>
+                                   Inclusion of files matching the provided
+                                   name, regardless of path, will be removed.
+                                   Images may be blacklisted in the same way.
   [--brand=BRAND]                  Override publican brand, default is \"common\".
   [--config=CONFIG]                Provide a path to an alternative publican.cfg
                                    template.
