@@ -45,6 +45,35 @@ To run **openstack-manuals-convert**:
 
 By default the Publican-friendly version of the guide will be output to **./target/publican/**.
 
+## Options
+
+  openstack-manuals-convert [OPTIONS]
+
+Available OPTIONS:
+
+  [--abstract=ABSTRACT]            Override the abstract used in the book.
+  [--brand=BRAND]                  Override publican brand, default is \"common\".
+  [--config=CONFIG]                Provide a path to an alternative publican.cfg
+                                   template.
+  [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
+                                   to apply to each XML file processed.
+  [--help]                         Display usage information.
+  [--images=IMAGEDIR]              Override the images used in the book with
+                                   those in IMAGEDIR. Directory structure and
+                                   image file names must match.
+  [--output=OUTPUT]                Provide a path to use for generated output.
+  [--productname=PRODUCTNAME]      Override the product name used in the book.
+  [--productnumber=PRODUCTNUMBER]  Override the product number used in the book.
+  [--profile=PROFILE]              Set profiling directives, e.g.:
+                                   "condition: user,os: rhel"
+  [--revision=REVISION]            Override the revision of the book,
+                                   default is of the form:
+
+                                       PRODUCTNUMBER-YYYYMMDD.
+
+  [--subtitle=SUBTITLE]            Override the subtitle of the book.
+  [--title=TITLE]                  Override the title of the book.
+
 ### Publican RFEs
 
 These Publican RFEs have been raised, implementation of them will streamline the conversion and packaging process:
