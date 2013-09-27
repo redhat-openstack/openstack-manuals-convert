@@ -170,6 +170,11 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Remove pubdate and releaseinfo as this information is captured
+       elsewhere. -->
+  <xsl:template match="d:pubdate"></xsl:template>
+  <xsl:template match="d:releaseinfo"></xsl:template>
+
   <!-- Remove copyright elements (now in Legal_Notice.xml. -->
   <xsl:template match="d:copyright"></xsl:template>
 
