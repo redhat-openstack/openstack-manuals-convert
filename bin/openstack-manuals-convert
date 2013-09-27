@@ -374,11 +374,12 @@ fi
 
 # Create the samples directories if it doesn't already exist.
 mkdir -p ${DEST_DIR_ABSL_SRC}/samples
-mkdir -p ${DEST_DIR_ABSL_SRC}/images
 
 # Move figures to images.
 if [ -d "${DEST_DIR_ABSL_SRC}/figures" ]; then
     mv ${DEST_DIR_ABSL_SRC}/figures ${DEST_DIR_ABSL_SRC}/images
+else
+    mkdir -p ${DEST_DIR_ABSL_SRC}/images
 fi
 
 # Copy the figures and samples from ./common to ./common
