@@ -69,6 +69,10 @@ Available OPTIONS:
                                    template.
   [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
                                    to apply to each XML file processed.
+  [--docname=DOCNAME]              Set a document name to be used in the
+                                   publican.cfg file. This will be used when
+                                   naming the package instead of the guide
+                                   title.
   [--help]                         Display usage information.
   [--images=IMAGEDIR]              Override the images used in the book with
                                    those in IMAGEDIR. Directory structure and

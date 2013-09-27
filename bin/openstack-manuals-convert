@@ -37,6 +37,7 @@ OPT_BLACKLIST=
 OPT_BRAND=
 OPT_CONFIG=
 OPT_CUSTOM_XSL=
+OPT_DOCNAME=
 OPT_IMAGE_DIR=
 OPT_OUTPUT=
 OPT_PRODUCT_NAME="OpenStack"
@@ -72,6 +73,10 @@ Available OPTIONS:
                                    template.
   [--customxsl=CUSTOMXSL]          Provide a path to a custom XSL transformation
                                    to apply to each XML file processed.
+  [--docname=DOCNAME]              Set a document name to be used in the
+                                   publican.cfg file. This will be used when
+                                   naming the package instead of the guide
+                                   title.
   [--help]                         Display usage information.
   [--images=IMAGEDIR]              Override the images used in the book with
                                    those in IMAGEDIR. Directory structure and
@@ -147,6 +152,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_CUSTOM_XSL=`echo ${VAL}`
+                    ;;
+                docname)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_DOCNAME=`echo ${VAL}`
+                    ;;
+                docname=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_DOCNAME=`echo ${VAL}`
                     ;;
                 help)
                     usage
@@ -522,11 +536,16 @@ if [ ! -z "${OPT_PROFILE}" ]; then
     echo ${OPT_PROFILE} | tr "," "\n" | sed -e "s/^\s*//" >> ${DEST_DIR_ABSL}/publican.cfg
 fi
 
-# Set web_version_label based on branch name.
+# Set web_version_label using user provided value or based on branch name.
 if [ ! -z "${OPT_WEB_VERSION_LABEL}" ]; then
     echo "web_version_label: ${OPT_WEB_VERSION_LABEL}" >> ${DEST_DIR_ABSL}/publican.cfg
 else
     echo "web_version_label: ${SOURCE_BRANCH}" >> ${DEST_DIR_ABSL}/publican.cfg
+fi
+
+# Set docname if one was provided.
+if [ ! -z "${OPT_DOCNAME}" ]; then
+    echo "docname: ${OPT_DOCNAME}" >> ${DEST_DIR_ABSL}/publican.cfg
 fi
 
 echo "Writing ${SOURCE_XML/\.xml/.ent}"
