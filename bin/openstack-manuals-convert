@@ -45,6 +45,7 @@ OPT_PROFILE=
 OPT_REVISION=`date +"%Y%m%d"`
 OPT_SUBTITLE="Built with Publican"
 OPT_TITLE=
+OPT_WEB_VERSION_LABEL=
 
 function usage {
 
@@ -87,6 +88,9 @@ Available OPTIONS:
 
   [--subtitle=SUBTITLE]            Override the subtitle of the book.
   [--title=TITLE]                  Override the title of the book.
+  [--web_version_label=LABEL]      Override the web_version_label directive,
+                                   the default is the name of the git branch
+                                   the content is being transformed from.
 "
 
 }
@@ -219,6 +223,15 @@ while getopts "${OPTSPEC}" OPTCHAR; do
                     VAL=${OPTARG#*=}
                     OPT=${OPTARG%=$VAL}
                     OPT_TITLE="${VAL}"
+                    ;;
+                web_version_label)
+                    VAL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+                    OPT_WEB_VERSION_LABEL="${VAL}"
+                    ;;
+                web_version_label=*)
+                    VAL=${OPTARG#*=}
+                    OPT=${OPTARG%=$VAL}
+                    OPT_WEB_VERSION_LABEL="${VAL}"
                     ;;
                 *)
                     if [ "${OPTERR}" = 1 ] && [ "${OPTSPEC:0:1}" != ":" ]; then
@@ -510,7 +523,11 @@ if [ ! -z "${OPT_PROFILE}" ]; then
 fi
 
 # Set web_version_label based on branch name.
-echo "web_version_label: ${SOURCE_BRANCH}" >> ${DEST_DIR_ABSL}/publican.cfg
+if [ ! -z "${OPT_WEB_VERSION_LABEL}" ]; then
+    echo "web_version_label: ${OPT_WEB_VERSION_LABEL}" >> ${DEST_DIR_ABSL}/publican.cfg
+else
+    echo "web_version_label: ${SOURCE_BRANCH}" >> ${DEST_DIR_ABSL}/publican.cfg
+fi
 
 echo "Writing ${SOURCE_XML/\.xml/.ent}"
 cat > ${DEST_DIR_ABSL_SRC}/${SOURCE_XML/\.xml/.ent} <<DELIM

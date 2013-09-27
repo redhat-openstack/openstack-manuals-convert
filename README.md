@@ -85,6 +85,9 @@ Available OPTIONS:
 
   [--subtitle=SUBTITLE]            Override the subtitle of the book.
   [--title=TITLE]                  Override the title of the book.
+  [--web_version_label=LABEL]      Override the web_version_label directive,
+                                   the default is the name of the git branch
+                                   the content is being transformed from.
 ````
 
 Example:
