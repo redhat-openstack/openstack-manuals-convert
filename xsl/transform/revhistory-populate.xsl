@@ -50,7 +50,7 @@
        <xsl:text>Rebased from commit </xsl:text>
        <xsl:element name="link" namespace="http://docbook.org/ns/docbook">
          <xsl:attribute name="xlink:href">
-           <xsl:text>https://github.com/openstack/openstack-manuals/archive/</xsl:text><xsl:value-of select="$commit" /><xsl:text>.tar.gz</xsl:text>
+           <xsl:text>http://git.openstack.org/cgit/openstack/openstack-manuals/commit/tools/autogenerate-config-docs?id=</xsl:text><xsl:value-of select="$commit" />
          </xsl:attribute>
          <xsl:value-of select="$commit" />
        </xsl:element>
