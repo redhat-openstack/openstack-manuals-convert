@@ -17,6 +17,7 @@ Requires:   coreutils
 Requires:	saxon
 Requires:	saxon-scripts
 Requires:   publican >= 3.2.1
+Requires:   docbook5-schemas
 
 %description
 Convert openstack-manuals guides into a format suitable for building with
