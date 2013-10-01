@@ -110,3 +110,11 @@ These Publican RFEs have been raised, implementation of them will streamline the
 * [893199](https://bugzilla.redhat.com/893199) Add CSS to common-db5 for centering "author" tag (same styling as corpauthor in DocBook 4.5)
 * [953675](https://bugzilla.redhat.com/953675) XSL for abstract and subtitle detection assumes info element is root node of XML file (not always the case when using info file directive).
 * [1004955](https://bugzilla.redhat.com/1004955) Publican print unused incorrectly detects files from higher levels in the directory structure (but within the book) as unused.
+
+The issue with abstract detection ([953675](https://bugzilla.redhat.com/953675)) prevents the use of Publican's package action. To work around this issue it is necessary to apply **abstract.xsl.patch** to **/usr/share/publican/xsl/abstract.xsl** like so:
+
+````
+$ sudo patch -p0 /usr/share/publican/xsl/abstract.xsl < abstract.xsl.patch
+````
+
+It is anticipated that this action will no longer be required in future releases of Publican (4+).
