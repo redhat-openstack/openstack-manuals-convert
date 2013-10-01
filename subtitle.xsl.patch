@@ -1,0 +1,11 @@
+--- /usr/share/publican/xsl/subtitle.xsl	2013-10-01 14:28:41.613142742 -0400
++++ /usr/share/publican/xsl/subtitle.xsl	2013-10-01 14:37:27.455123710 -0400
+@@ -12,7 +12,7 @@
+ 
+ <!-- Note: do not indent this file!  Any whitespace here will be reproduced in the output -->
+ 
+-<xsl:template match="/"><xsl:value-of select="/bookinfo/subtitle"/><xsl:value-of select="/setinfo/subtitle"/><xsl:value-of select="/articleinfo/subtitle"/><xsl:value-of select="/d:info/d:subtitle"/>
++<xsl:template match="/"><xsl:value-of select="/bookinfo/subtitle"/><xsl:value-of select="/setinfo/subtitle"/><xsl:value-of select="/articleinfo/subtitle"/><xsl:value-of select="//d:info/d:subtitle"/>
+ </xsl:template>
+ 
+ </xsl:stylesheet>

@@ -115,6 +115,7 @@ The issue with abstract detection ([953675](https://bugzilla.redhat.com/953675))
 
 ````
 $ sudo patch -p0 /usr/share/publican/xsl/abstract.xsl < abstract.xsl.patch
+$ sudo patch -p0 /usr/share/publican/xsl/subtitle.xsl < subtitle.xsl.patch
 ````
 
 It is anticipated that this action will no longer be required in future releases of Publican (4+).
