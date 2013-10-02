@@ -1,4 +1,4 @@
-AC_INIT([openstack-manuals-convert], [0.2.0], [sgordon@redhat.com])
+AC_INIT([openstack-manuals-convert], [0.3.0], [sgordon@redhat.com])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign -Wno-portability tar-pax])
 
