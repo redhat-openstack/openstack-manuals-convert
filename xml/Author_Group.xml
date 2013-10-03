@@ -14,13 +14,4 @@
 		</affiliation>
         <email/>
     </author>
-	<author>
-      <personname>
-        <firstname/><surname>OpenStack Foundation</surname></personname>
-        <affiliation>
-			<orgname/>
-			<orgdiv/>
-		</affiliation>
-        <email/>
-    </author>
 </authorgroup>
