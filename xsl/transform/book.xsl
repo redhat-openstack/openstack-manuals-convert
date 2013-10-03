@@ -48,7 +48,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="d:book/d:subtitle | d:book/d:info/d:subtitle">
+  <xsl:template match="d:book/d:subtitle | d:book/d:info/d:subtitle | d:book/d:titleabbrev | d:book/d:info/d:titleabbrev">
     <xsl:choose>
       <xsl:when test="$subtitle != ''">
         <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
@@ -56,9 +56,9 @@
         </xsl:element>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:copy>
-          <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
+        <xsl:element name="subtitle" namespace="http://docbook.org/ns/docbook">
+          <xsl:copy-of select="child::* | child::node()"/>
+        </xsl:element>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
